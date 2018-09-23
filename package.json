@@ -1,6 +1,6 @@
 {
   "name": "@immfly/flights-map",
-  "version": "1.0.27",
+  "version": "1.0.0",
   "description": "Custom element that receives a list of flights and show them in a map with a custom configuration",
   "main": "lib.js",
   "author": "Albert Pérez Farrés ",
@@ -25,7 +25,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sonofjavascript/radar-test.git"
+    "url": "git+https://github.com/immfly/flights-map.git"
   },
   "keywords": [
     "planes",
@@ -34,9 +34,9 @@
     "flights"
   ],
   "bugs": {
-    "url": "https://github.com/sonofjavascript/radar-test/issues"
+    "url": "https://github.com/immfly/flights-map/issues"
   },
-  "homepage": "https://github.com/sonofjavascript/radar-test#readme",
+  "homepage": "https://github.com/immfly/flights-map#readme",
   "dependencies": {
     "babel-polyfill": "^6.26.0"
   }

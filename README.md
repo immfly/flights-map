@@ -1,6 +1,6 @@
-# @immfly/radar-test-2
+# @immfly/flights-map
 
-![npm](https://img.shields.io/npm/v/@immfly/radar-test-2.svg) ![license](https://img.shields.io/npm/l/@immfly/radar-test-2.svg) ![github-issues](https://img.shields.io/github/issues/sonofjavascript/radar-test.svg)  
+![npm](https://img.shields.io/npm/v/@immfly/flights-map.svg) ![license](https://img.shields.io/npm/l/@immfly/flights-map.svg) ![github-issues](https://img.shields.io/github/issues/sonofjavascript/radar-test.svg)  
 
 Custom element that receives a list of flights and show them in a map with an optional custom configuration.
 
@@ -9,13 +9,13 @@ https://immfly.github.io/flights-map-demo.github.io/
 
 ## Install
 
-`npm install --save @immfly/radar-test-2`
+`npm install --save @immfly/flights-map`
 
 
 ## Usage
 **1.** Import the package in your project. Options:
-  - **ECMAScript 6**: `import '@immfly/radar-test-2`
-  - **HTML**: `<script src="/node_modules/@immfly/radar-test-2/lib.js"></script>`
+  - **ECMAScript 6**: `import '@immfly/flights-map`
+  - **HTML**: `<script src="/node_modules/@immfly/flights-map/lib.js"></script>`
 
 **2.** Add ```<flights-map></flights-map>``` tag in a html code snnipet. **Important**: this tag must be in a container with a height and a width. 
 **3.** Set a flights array as property. The objects of this array must have this structure:
@@ -47,7 +47,7 @@ document.getElementsByTagName('flights-map')[0].flights = flightsArray
 In **ReactJS**, you can add this array list as property in this way:
 ```
 import React from 'react'
-import '@immfly/radar-test-2'
+import '@immfly/flights-map'
 
 class FlightsMapContainer extends React.Component {
   render () {
@@ -133,7 +133,7 @@ document.getElementsByTagName('flights-map')[0].config = config
 In **ReactJS**, you can add this configuration in this way:
 ```
 import React from 'react'
-import '@immfly/radar-test-2'
+import '@immfly/flights-map'
 
 class FlightsMapContainer extends React.Component {
   render () {
