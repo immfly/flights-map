@@ -18,7 +18,6 @@ const getValue = (object, attribute, additionalText) => {
     object = object[attributes[i]]
     i++
   }
-  if (additionalText) console.log(additionalText)
   if (additionalText) return additionalText[object]
   return object
 }
