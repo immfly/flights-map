@@ -1,0 +1,43 @@
+{
+  "name": "@immfly/flights-map",
+  "version": "1.0.27",
+  "description": "Custom element that receives a list of flights and show them in a map with a custom configuration",
+  "main": "lib.js",
+  "author": "Albert Pérez Farrés ",
+  "scripts": {
+    "start": "webpack-dev-server --mode development --config dev/webpack.config.js",
+    "build": "webpack --mode production ./src/Index.js --output ./lib.js",
+    "prepublish": "npm run build",
+    "standard": "standard --fix"
+  },
+  "standard": {
+    "ignore": [
+      "/src/lib/*"
+    ]
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^3.2.0",
+    "standard": "^11.0.1",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonofjavascript/radar-test.git"
+  },
+  "keywords": [
+    "planes",
+    "map",
+    "radar",
+    "flights"
+  ],
+  "bugs": {
+    "url": "https://github.com/sonofjavascript/radar-test/issues"
+  },
+  "homepage": "https://github.com/sonofjavascript/radar-test#readme",
+  "dependencies": {
+    "babel-polyfill": "^6.26.0"
+  }
+}
