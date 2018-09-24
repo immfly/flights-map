@@ -18,6 +18,7 @@ https://immfly.github.io/flights-map-demo.github.io/
   - **HTML**: `<script src="/node_modules/@immfly/flights-map/lib.js"></script>`
 
 **2.** Add ```<flights-map></flights-map>``` tag in a html code snnipet. **Important**: this tag must be in a container with a height and a width. 
+
 **3.** Set a flights array as property. The objects of this array must have this structure:
 ```
 {
@@ -37,12 +38,14 @@ https://immfly.github.io/flights-map-demo.github.io/
 }
 ```
 
-In **pure Javascript**, you can add this array list as property in tihs way:
+In **pure Javascript**, you can add this array list as property in this way:
 
 ```
 var flightsArray = [...]
 document.getElementsByTagName('flights-map')[0].flights = flightsArray
 ```
+
+In this code snnipet, we access to the DOM element **<flights-map>** and set an array in its **flights** property.
 
 In **ReactJS**, you can add this array list as property in this way:
 ```
@@ -75,10 +78,11 @@ export default FlightsMapContainer
 ```
 
 The most strange or particular code line could be `<flights-map ref={(el) => { el.flights = flights }} />`. 
-`flights-map` is a **web custom element** and ReactJS does not interpret it as a React component. So, the only way to send JSON data (arrays, objects) to a custom element is using `ref`react components property.
+
+`flights-map` is a **web custom element** and ReactJS does not interpret it as a React component. So, the only way to send JSON data (arrays, objects) to a custom element is using `ref`react components property. 
 
 ## Custom configuration
-You can optionally specify a custom global configuration. This is de default configuration:
+You can optionally specify a custom global configuration. This is the default configuration:
 ```
 {
   mapContainerId: 'map', // The id of the map container on the custom element
@@ -114,7 +118,7 @@ You can optionally specify a custom global configuration. This is de default con
 }
 ```
 
-Passing this configuration is optional. So, you can specify only the configuration you want to change. For example, if you only want to change the **color of the land** and the **font size on markers**, this config has to be passed like *flights* data. Example:
+So, you can specify only the configuration you want to change. For example, if you only want to change the **color of the land** and the **font size on markers**, you have to set a property named **config**. For example:
 
 In **pure Javascript**, you can add this configuration in this way:
 
@@ -153,9 +157,20 @@ export default FlightsMapContainer
 ```
 
 ## Development usage
-First time, run `npm install`.
-Once you have required npm packages installed, run `npm start` to start development mode. In the project there is a folder named **examples**, where you can find a simple pure Javascript and HTML example that loads a list of flights initially and five seconds later, those flights change.
+*Only if you haved clone the project and you want to interact with it, improve it or try it.*
 
+First time, run `npm install`.
+
+Once you have required npm packages installed, run `npm start` to start development mode. In the project there is a folder named **examples**, where you can find a simple pure Javascript and HTML example that loads a list of flights initially and change those flights five seconds later. 
+
+If you want to add a new example, for example **index2.html**, you have to add it in the **examples** folder, and then modify the **template** attribute of the **htmlWebpackPlugin** on the **webpack.config.js** file, that it is located on the **dev** folder.
+
+```
+const htmlWebpackPlugin = new HtmlWebPackPlugin({
+  template: './examples/index2.html', // Route of the file you want to run on develemponet mode
+  filename: './index.html'
+})
+```
 
 ## Contributing
 
