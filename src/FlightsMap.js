@@ -1,10 +1,9 @@
 import DefaultConfig from './static/DefaultConfig'
-import MapService from './services/MapService'
+import { mergeConfigObject, createMapContainer, buildMap, updateMap } from './services/MapService'
 
 class FlightsMap extends global.HTMLElement {
   constructor () {
     super()
-    this.mapService = new MapService()
     this.addEventListener('mapLoaded', this.addPendingFlights)
   }
 
@@ -34,16 +33,12 @@ class FlightsMap extends global.HTMLElement {
   }
 
   manageConfig (baseConfig, newConfig) {
-    const config = this.mapService.mergeObject(baseConfig, newConfig)
+    const config = mergeConfigObject(baseConfig, newConfig)
     return config
   }
 
-  manageFlights () {
-    return this.flights
-  }
-
   attachContent (id, backgroundColor) {
-    const mapContainer = this.mapService.createContainer(id, backgroundColor)
+    const mapContainer = createMapContainer(id, backgroundColor)
     this.shadowRoot.appendChild(mapContainer.cloneNode(true))
   }
 
@@ -58,13 +53,13 @@ class FlightsMap extends global.HTMLElement {
 
   updateMap (map, flights, config) {
     if (flights && flights.length > 0) {
-      this.mapService.update(map, flights, config)
+      updateMap(map, flights, config)
       if (!map) {
         this.pendingAddFlights = true
         return
       }
       if (!this.pendingAddFlights) {
-        this.mapService.update(map, flights, config)
+        updateMap(map, flights, config)
       }
     }
   }
@@ -75,7 +70,7 @@ class FlightsMap extends global.HTMLElement {
         var self = this
         self.tryToAddDataSinceMapIsLoaded = setInterval(function () {
           if (self.map) {
-            self.mapService.update(self.map, self.mapFlights, self.mapConfig)
+            updateMap(self.map, self.mapFlights, self.mapConfig)
             clearInterval(self.tryToAddDataSinceMapIsLoaded)
           }
         }, 300)
@@ -88,7 +83,7 @@ class FlightsMap extends global.HTMLElement {
   async createMap (config, flights) {
     this.attachShadow({ mode: 'open' })
     this.attachContent(config.mapContainerId, config.colors.background)
-    const map = await this.mapService.create(config, flights)
+    const map = await buildMap(config, flights)
     this.dispatchLoadedEvent()
     return map
   }

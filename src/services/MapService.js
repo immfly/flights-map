@@ -1,5 +1,4 @@
-
-import FlightsService from './FlightsService'
+import {shouldSetFlightInProgres, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle} from './FlightsService'
 
 const defaultPlane = {
   svgPath: 'm2,106h28l24,30h72l-44,-133h35l80,132h98c21,0 21,34 0,34l-98,0 -80,134h-35l43,-133h-71l-24,30h-28l15,-47',
@@ -136,92 +135,86 @@ const updateContent = (map, contentMap) => {
   map.validateData()
 }
 
-class MapService {
-  constructor () {
-    this.flightsService = new FlightsService()
-  }
 
-  mergeObject (baseObject, newObject) {
-    for (let key in newObject) {
-      const object = newObject[key]
-      if (baseObject.hasOwnProperty(key)) {
-        baseObject[key] = isObject(object) ? this.mergeObject(baseObject[key], object) : newObject[key]
-      }
+export const mergeConfigObject = (baseObject, newObject) => {
+  for (let key in newObject) {
+    const object = newObject[key]
+    if (baseObject.hasOwnProperty(key)) {
+      baseObject[key] = isObject(object) ? mergeObject(baseObject[key], object) : newObject[key]
     }
-    return baseObject
   }
-
-  createContainer (id, backgroundColor) {
-    const container = document.createElement('div')
-    if (id) container.id = id
-    container.style.backgroundColor = backgroundColor
-    container.style.height = '100%'
-    return container
-  }
-
-  getAirportsObjects (flight, position, shouldAnimate, config) {
-    const images = []
-    if (shouldAnimate) {
-      images.push(buildAirport(flight, flight.origin, flight.color, flight.name, config))
-      images.push(buildAirport(flight, flight.destination, flight.color, flight.name, config))
-    } else if (this.flightsService.isFlightCompleted(position)) {
-      images.push(buildAirport(flight, flight.destination, flight.color, flight.name, config))
-    } else {
-      images.push(buildAirport(flight, flight.origin, flight.color, flight.name, config))
-    }
-    return images
-  }
-
-  getObjectsForFlight (flight, i, config) {
-    const images = []
-    const lines = []
-    const planeName = 'plane' + i
-    const flightLineId = 'flight' + i
-    const position = this.flightsService.getFlightPosition(flight.state)
-    const shouldAnimate = this.flightsService.shouldSetFlightInProgress(config.globalFlightsState, flight.state)
-    lines.push(buildLine(flightLineId, flight, config))
-    images.push(buildPlane(flight, planeName, flightLineId, position, shouldAnimate, config))
-    images.push(...this.getAirportsObjects(flight, position, shouldAnimate, config))
-    return {images, lines}
-  }
-
-  buildData (data, config) {
-    const images = []
-    const lines = []
-    if (data) {
-      for (let i = 0; i < data.length; i++) {
-        const flight = data[i]
-        const flightObjects = this.getObjectsForFlight(flight, i, config)
-        images.push(...flightObjects.images)
-        lines.push(...flightObjects.lines)
-      }
-    }
-    return { images, lines }
-  }
-
-  update (map, flights, config) {
-    const mapFlightsData = this.buildData(flights, config)
-    map && updateContent(map, buildMapData(config, mapFlightsData))
-  }
-
-  initialize (config, flights) {
-    const flightsData = this.buildData(flights, config)
-    const containerDivMap = document.querySelector('flights-map').shadowRoot.getElementById(config.mapContainerId)
-    const map = window.AmCharts.makeChart(containerDivMap, buildMapData(config, flightsData))
-    return map
-  }
-
-  async create (config, flights) {
-    const self = this
-    window.AmCharts.isReady = true
-    const promise = new Promise(function (resolve) {
-      setTimeout(function () {
-        const map = self.initialize(config, flights)
-        resolve(map)
-      }, 1000)
-    })
-    return promise
-  }
+  return baseObject
 }
 
-export default MapService
+export const createMapContainer = (id, backgroundColor) => {
+  const container = document.createElement('div')
+  if (id) container.id = id
+  container.style.backgroundColor = backgroundColor
+  container.style.height = '100%'
+  return container
+}
+
+export const getAirportsObjects = (flight, position, shouldAnimate, config) => {
+  const images = []
+  if (shouldAnimate || isFlightOnMiddle(position)) {
+    images.push(buildAirport(flight, flight.origin, flight.color, flight.name, config))
+    images.push(buildAirport(flight, flight.destination, flight.color, flight.name, config))
+  } else if (isFlightPendingToTakeOff(position)) {
+    images.push(buildAirport(flight, flight.destination, flight.color, flight.name, config))
+  } else if (isFlightLanded(position)) {
+    images.push(buildAirport(flight, flight.origin, flight.color, flight.name, config))
+  }
+  return images
+}
+
+const getObjectsForFlight = (flight, i, config) => {
+  const images = []
+  const lines = []
+  const planeName = 'plane' + i
+  const flightLineId = 'flight' + i
+  const position = getFlightPosition(flight.state)
+  const shouldAnimate = shouldSetFlightInProgres(config.globalFlightsState, flight.state)
+  lines.push(buildLine(flightLineId, flight, config))
+  images.push(buildPlane(flight, planeName, flightLineId, position, shouldAnimate, config))
+  images.push(...getAirportsObjects(flight, position, shouldAnimate, config))
+  return {images, lines}
+}
+
+const buildData = (data, config) => {
+  const images = []
+  const lines = []
+  if (data) {
+    for (let i = 0; i < data.length; i++) {
+      const flight = data[i]
+      const flightObjects = getObjectsForFlight(flight, i, config)
+      images.push(...flightObjects.images)
+      lines.push(...flightObjects.lines)
+    }
+  }
+  return { images, lines }
+}
+
+export const updateMap = (map, flights, config) => {
+  const mapFlightsData = buildData(flights, config)
+  map && updateContent(map, buildMapData(config, mapFlightsData))
+}
+
+const initialize  = (config, flights) => {
+  const flightsData = buildData(flights, config)
+  const flightsContainer = document.querySelector('flights-map')
+  if (!flightsContainer) return
+  const containerDivMap = flightsContainer.shadowRoot.getElementById(config.mapContainerId)
+  const map = window.AmCharts.makeChart(containerDivMap, buildMapData(config, flightsData))
+  return map
+}
+
+export const buildMap = async (config, flights) => {
+  window.AmCharts.isReady = true
+  const promise = new Promise(function (resolve) {
+    setTimeout(function () {
+      const map = initialize(config, flights)
+      resolve(map)
+    }, 1000)
+  })
+  return promise
+}

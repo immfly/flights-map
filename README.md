@@ -33,7 +33,7 @@ https://immfly.github.io/flights-map-demo.github.io/
     latitude: 43.8163, // Destination city latitude
     longitude: -79.4287 // Destination city longitude
   },
-  state: 0, // * Optional. Flight state: 0 means pending to start, 1 means in progress, and 2 means completed
+  state: 0, // * Optional. Flight state: 0 means pending to start, 1 means in progress, and 2 means completed. If there is no state, the position of the plane on the flight will be on the middle
   color: '#F60' // * Optional. Color to be painted on the map, including plane, cities and line flight
 }
 ```
@@ -70,7 +70,7 @@ class FlightsMapContainer extends React.Component {
         color: '#DA291C'
       }
     ]
-    return <flights-map ref={(el) => { el.flights = flights }} />
+    return <flights-map ref={(el) => { el => el && (el.flights = flights)} } />
   }
 }
 
@@ -149,7 +149,7 @@ class FlightsMapContainer extends React.Component {
         markersFontSize: 12
       }
     }
-    return <flights-map ref={(el) => { el.config = config }} />
+    return <flights-map ref={(el) => { el && (el.config = config) }} />
   }
 }
 

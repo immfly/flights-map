@@ -13,20 +13,24 @@ const isFlightCompleted = (state) => {
   return state === FlightStates.COMPLETED
 }
 
-class FlightsService {
-  shouldSetFlightInProgress (configState, flightState) {
-    return configState !== 'animate' && isFlightInProgress(flightState)
-  }
-
-  getFlightPosition (flightState) {
-    if (isFlightPendingToStart(flightState)) return FlightsPositions.INITIAL
-    if (isFlightCompleted(flightState)) return FlightsPositions.FINAL
-    return 0
-  }
-
-  isFlightCompleted (position) {
-    return position === FlightsPositions.INITIAL
-  }
+export const shouldSetFlightInProgres = (configState, flightState) => {
+  return configState !== 'animate' && isFlightInProgress(flightState)
 }
 
-export default FlightsService
+export const getFlightPosition = (flightState) => {
+  if (isFlightPendingToStart(flightState)) return FlightsPositions.INITIAL
+  if (isFlightCompleted(flightState)) return FlightsPositions.FINAL
+  return FlightsPositions.MIDDLE
+}
+
+export const isFlightLanded = (position) => {
+  return position === FlightsPositions.FINAL
+}
+
+export const isFlightPendingToTakeOff = (position) => {
+  return position === FlightsPositions.INITIAL
+}
+
+export const isFlightOnMiddle = (position) => {
+  return position === FlightsPositions.MIDDLE
+}
