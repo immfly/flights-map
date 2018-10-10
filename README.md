@@ -95,6 +95,7 @@ You can optionally specify a custom global configuration. This is the default co
     lines: '#000000', // Specifies a global color for lines wich flight has no color
     cities: '#000000' // Specifies a global color for cities wich flight has no color
   },
+  zoomedContinent: null, // Specifies default bounding boxes to initialize the map. You can use 'europe', 'asia', 'oceania', 'africa', 'north_america' or 'south_america'
   dataToShowOnMarkers: [
     { id: 'name', text: 'Flight' },
     { id: 'origin.city', text: 'Origin' },
@@ -109,7 +110,12 @@ You can optionally specify a custom global configuration. This is the default co
   zoom: {
     initialLevel: 1, // Specifies initial zoom level
     minLevel: 1, // Specifies minimum zoom level
-    maxLevel: 7 // Specifies maximum zoom level
+    maxLevel: 7 // Specifies maximum zoom level,
+    initialCenter: { // Specifies initial zoom position of the map. If you have set the attribute zoomedContinent, this one has one effect
+      latitude: null, // Specifies the initial zoom latitude
+      longitude: null, // Specifies the initial zoom longitude
+      level: null // Specifies the initial zoom level
+    }
   },
   texts: { 
     labelsFontSize: 8, // Specifies labels font size of the map

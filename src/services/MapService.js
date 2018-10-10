@@ -1,4 +1,5 @@
 import {shouldSetFlightInProgres, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle} from './FlightsService'
+import ContinentsCoordinates from '../static/ContinentsCoordinates'
 
 const defaultPlane = {
   svgPath: 'm2,106h28l24,30h72l-44,-133h35l80,132h98c21,0 21,34 0,34l-98,0 -80,134h-35l43,-133h-71l-24,30h-28l15,-47',
@@ -199,17 +200,37 @@ export const updateMap = (map, flights, config) => {
   map && updateContent(map, buildMapData(config, mapFlightsData))
 }
 
+const initializeMapZoom = (map, zoomData) => {
+  if (zoomData) map.zoomToLongLat(zoomData.level, zoomData.longitude, zoomData.latitude, true)
+}
+
+const getContintentData = (data) => {
+  return ContinentsCoordinates[data.toUpperCase()]
+}
+
+const getZoomData = (continentData) => {
+  const continent = getContintentData(continentData)
+  if (continent) return { level: continent.zoom, latitude: continent.latitude, longitude: continent.longitude }
+}
+
+const getSpecificZoomData = (center) => {
+  return { level: center.level, latitude: center.latitude, longitude: center.longitude }
+}
+
 const initialize  = (config, flights) => {
   const flightsData = buildData(flights, config)
   const flightsContainer = document.querySelector('flights-map')
   if (!flightsContainer) return
   const containerDivMap = flightsContainer.shadowRoot.getElementById(config.mapContainerId)
   const map = window.AmCharts.makeChart(containerDivMap, buildMapData(config, flightsData))
+  if (config.zoomedContinent) initializeMapZoom(map, getZoomData(config.zoomedContinent))
+  else if (config.zoom.initialCenter && config.zoom.initialCenter.latitude && config.zoom.initialCenter.longitude && config.zoom.initialCenter.level) {
+    initializeMapZoom(map, getSpecificZoomData(config.zoom.initialCenter))
+  }
   return map
 }
 
 export const buildMap = async (config, flights) => {
-  window.AmCharts.isReady = true
   const promise = new Promise(function (resolve) {
     setTimeout(function () {
       const map = initialize(config, flights)

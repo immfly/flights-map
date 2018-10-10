@@ -11,6 +11,7 @@ const DefaultConfig = {
     lines: '#000000',
     cities: '#000000'
   },
+  zoomedContinent: 'asia',
   dataToShowOnMarkers: [
     {
       id: 'name',
@@ -43,7 +44,12 @@ const DefaultConfig = {
   zoom: {
     initialLevel: 1,
     minLevel: 1,
-    maxLevel: 7
+    maxLevel: 10,
+    initialCenter: {
+      latitude: null,
+      longitude: null,
+      level: null
+    }
   },
   texts: {
     labelsFontSize: 8,
