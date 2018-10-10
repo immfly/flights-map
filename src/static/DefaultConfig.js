@@ -11,7 +11,7 @@ const DefaultConfig = {
     lines: '#000000',
     cities: '#000000'
   },
-  zoomedContinent: 'asia',
+  zoomedContinent: null,
   dataToShowOnMarkers: [
     {
       id: 'name',
