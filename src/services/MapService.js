@@ -141,7 +141,7 @@ export const mergeConfigObject = (baseObject, newObject) => {
   for (let key in newObject) {
     const object = newObject[key]
     if (baseObject.hasOwnProperty(key)) {
-      baseObject[key] = isObject(object) ? mergeObject(baseObject[key], object) : newObject[key]
+      baseObject[key] = isObject(object) ? mergeConfigObject(baseObject[key], object) : newObject[key]
     }
   }
   return baseObject
