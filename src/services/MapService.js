@@ -1,4 +1,4 @@
-import {shouldSetFlightInProgres, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle} from './FlightsService'
+import {shouldSetFlightInProgres, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle, manageLinesCurvatureDependingOnDuplicated} from './FlightsService'
 import ContinentsCoordinates from '../static/ContinentsCoordinates'
 
 const defaultPlane = {
@@ -192,6 +192,7 @@ const buildData = (data, config) => {
       lines.push(...flightObjects.lines)
     }
   }
+  const managedLines = manageLinesCurvatureDependingOnDuplicated(lines)
   return { images, lines }
 }
 
