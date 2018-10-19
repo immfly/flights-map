@@ -1,7 +1,7 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin')
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
-  template: './examples/index1.html',
+  template: './examples/index2.html',
   filename: './index.html'
 })
 
