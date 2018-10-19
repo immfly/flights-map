@@ -27,7 +27,7 @@ const buildTextMarker = (flight, markersConfig) => {
   let text = ''
   for (const markerConfig of markersConfig) {
     const value = getValue(flight, markerConfig.id, markerConfig.additional)
-    if (value) {
+    if (value || value === 0) {
       text += getConfigText(markerConfig.text, value) + '</br>'
     }
   }
