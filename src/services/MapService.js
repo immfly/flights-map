@@ -1,4 +1,5 @@
-import {shouldSetFlightInProgres, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle} from './FlightsService'
+import {shouldSetFlightInProgress, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle} from './FlightsService'
+import {manageLinesCurvatureDependingOnDuplicated} from './DuplicatedFlightsService'
 import ContinentsCoordinates from '../static/ContinentsCoordinates'
 
 const defaultPlane = {
@@ -33,7 +34,7 @@ const buildTextMarker = (flight, markersConfig) => {
   return text
 }
 
-const buildPlane = (flight, name, flightLineId, position, shouldAnimate, config) => {
+const buildPlane = (flight, name, flightLineId, position, shouldAnimate, scale, config) => {
   const color = flight.color || config.colors.planes
   return Object.assign(
     {
@@ -42,7 +43,7 @@ const buildPlane = (flight, name, flightLineId, position, shouldAnimate, config)
       color: color,
       rollOverColor: color,
       positionOnLine: position,
-      scale: 0.05,
+      scale: scale,
       animateAlongLine: shouldAnimate,
       flipDirection: config.animation.flip,
       loop: config.animation.loop,
@@ -136,7 +137,6 @@ const updateContent = (map, contentMap) => {
   map.validateData()
 }
 
-
 export const mergeConfigObject = (baseObject, newObject) => {
   for (let key in newObject) {
     const object = newObject[key]
@@ -174,9 +174,10 @@ const getObjectsForFlight = (flight, i, config) => {
   const planeName = 'plane' + i
   const flightLineId = 'flight' + i
   const position = getFlightPosition(flight.state)
-  const shouldAnimate = shouldSetFlightInProgres(config.globalFlightsState, flight.state)
+  const scale = position === 0.5 ? 0.025 : 0.05
+  const shouldAnimate = shouldSetFlightInProgress(config.globalFlightsState, config.animation.enabled, flight.state)
   lines.push(buildLine(flightLineId, flight, config))
-  images.push(buildPlane(flight, planeName, flightLineId, position, shouldAnimate, config))
+  images.push(buildPlane(flight, planeName, flightLineId, position, shouldAnimate, scale, config))
   images.push(...getAirportsObjects(flight, position, shouldAnimate, config))
   return {images, lines}
 }
@@ -192,6 +193,7 @@ const buildData = (data, config) => {
       lines.push(...flightObjects.lines)
     }
   }
+  manageLinesCurvatureDependingOnDuplicated(lines)
   return { images, lines }
 }
 
@@ -217,7 +219,7 @@ const getSpecificZoomData = (center) => {
   return { level: center.level, latitude: center.latitude, longitude: center.longitude }
 }
 
-const initialize  = (config, flights) => {
+const initialize = (config, flights) => {
   const flightsData = buildData(flights, config)
   const flightsContainer = document.querySelector('flights-map')
   if (!flightsContainer) return

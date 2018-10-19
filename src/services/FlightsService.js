@@ -13,8 +13,8 @@ const isFlightCompleted = (state) => {
   return state === FlightStates.COMPLETED
 }
 
-export const shouldSetFlightInProgres = (configState, flightState) => {
-  return configState !== 'animate' && isFlightInProgress(flightState)
+export const shouldSetFlightInProgress = (configState, animationEnabled, flightState) => {
+  return configState !== 'animate' && animationEnabled && isFlightInProgress(flightState)
 }
 
 export const getFlightPosition = (flightState) => {
