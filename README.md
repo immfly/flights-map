@@ -34,7 +34,8 @@ https://immfly.github.io/flights-map-demo.github.io/
     longitude: -79.4287 // Destination city longitude
   },
   state: 0, // * Optional. Flight state: 0 means pending to start, 1 means in progress, and 2 means completed. If there is no state, the position of the plane on the flight will be on the middle
-  color: '#F60' // * Optional. Color to be painted on the map, including plane, cities and line flight
+  color: '#F60' // * Optional. Color to be painted on the map, including plane, cities and line flight,
+  route: [{latitude:29.719757, longitude:-13.391225, date:"2018-11-11T18:58:32.590Z"}, {latitude:29.719757, longitude:-13.391225, date:"2018-11-11T18:59:22.988Z"}] // * Optional. Array of points with latitude, longitude and date. If this key is on the flight object, the state will be ommited and the plane will be painted on the last last position
 }
 ```
 
