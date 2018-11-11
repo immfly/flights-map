@@ -44,7 +44,7 @@ const DefaultConfig = {
   zoom: {
     initialLevel: 1,
     minLevel: 1,
-    maxLevel: 10,
+    maxLevel: 15,
     initialCenter: {
       latitude: null,
       longitude: null,
