@@ -1,12 +1,12 @@
-import { shouldSetFlightInProgress, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle } from './FlightsService'
+import { shouldSetFlightInProgress, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle, getPositioOnLine } from './FlightsService'
 import { manageLinesCurvatureDependingOnDuplicated } from './DuplicatedFlightsService'
-import { order, cleanPoints } from '../utils/arrayManager'
+import { cleanPoints } from '../utils/arrayManager'
 import ContinentsCoordinates from '../static/ContinentsCoordinates'
 import FlightsPositions from '../static/FlightsPositions';
 
 const defaultPlane = {
   svgPath: 'm2,106h28l24,30h72l-44,-133h35l80,132h98c21,0 21,34 0,34l-98,0 -80,134h-35l43,-133h-71l-24,30h-28l15,-47',
-  positionScale: 1.3,
+  positionScale: 1.1,
   fixedSize: true
 }
 const defaultLine = { alpha: 0.4, thickness: 2 }
@@ -55,7 +55,7 @@ const buildPlane = (flight, name, flightLineId, position, shouldAnimate, scale, 
   )
 }
 
-const buildLine = (flightLineId, flight, config, origin, destination) => {
+const buildLine = (flightLineId, flight, config, origin, destination, shouldOverrideLine) => {
   const flightOrigin = origin || flight.origin
   const flightDestination = destination || flight.destination
   const linesArc = (origin && destination) ? 0 : config.linesArc
@@ -66,6 +66,7 @@ const buildLine = (flightLineId, flight, config, origin, destination) => {
       latitudes: [flightOrigin.latitude, flightDestination.latitude],
       longitudes: [flightOrigin.longitude, flightDestination.longitude],
       arc: linesArc,
+      overrideLine: shouldOverrideLine,
       balloonText: buildTextMarker(flight, config.dataToShowOnMarkers)
     },
     defaultLine
@@ -191,9 +192,18 @@ const getObjectsForFlight = (flight, i, config) => {
     }
     flightLineId = 'flight-route' + (points.length - 2)
   } else {
-    lines.push(buildLine(flightLineId, flight, config))
+    if (flight.actualPosition) {
+      const initialLineId = 'flight-initial-' + i
+      const finalLineId = 'flight-final-' + i
+      lines.push(buildLine(initialLineId, flight, config, null, null, true))
+      lines.push(buildLine(finalLineId, flight, config, null, null, true))
+      const positionOnLine = getPositioOnLine(flight.origin, flight.destination, flight.actualPosition)
+      images.push(buildPlane(flight, planeName, initialLineId, positionOnLine, shouldAnimate, scale, config))
+    } else {
+      lines.push(buildLine(flightLineId, flight, config))
+      images.push(buildPlane(flight, planeName, flightLineId, position, shouldAnimate, scale, config))
+    }
   }
-  images.push(buildPlane(flight, planeName, flightLineId, position, shouldAnimate, scale, config))
   images.push(...getAirportsObjects(flight, position, shouldAnimate, config))
   return {images, lines}
 }

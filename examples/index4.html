@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body style="margin: 0;">
+
+<div style="height: 100vh; width: 100%;">
+    <flights-map></flights-map>
+</div>
+
+<script>
+    var flights = [
+        {
+            name: 'V131',
+            origin: { city: 'Paris', latitude: 40.471926, longitude: -3.56264 },
+            destination: { city: 'Toronto', latitude: 49.0127983093, longitude: 2.54999995232 },
+            state: 1,
+            color: '#F60',
+            actualPosition: {latitude:44.587501525878906, longitude:-1.1114948987960815}
+        }
+    ]
+
+    setTimeout(function() {
+        document.getElementsByTagName('flights-map')[0].flights = flights
+        document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
+    }, 200)
+    // setTimeout(function() {
+    //     document.getElementsByTagName('flights-map')[0].flights = flights.slice(0, 10)
+    // }, 10000)
+    // setTimeout(function() {
+    //     document.getElementsByTagName('flights-map')[0].flights = [flights[0], flights[6], flights[14]]
+    // }, 15000)
+</script>
+
+</body>
+</html>

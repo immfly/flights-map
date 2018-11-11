@@ -13,6 +13,30 @@ const isFlightCompleted = (state) => {
   return state === FlightStates.COMPLETED
 }
 
+export const getPositioOnLine = (point1, point2, actualPoint) => {
+  const totalDistance = getDistanceInKM(point1, point2)
+  const actualDistance = getDistanceInKM(point1, actualPoint)
+  return actualDistance / totalDistance
+}
+
+const getDistanceInKM = (point1, point2) => {
+  var R = 6371; 
+  var dLat = deg2rad(point2.latitude - point1.latitude);  // deg2rad below
+  var dLon = deg2rad(point2.longitude-point1.longitude); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(point1.latitude)) * Math.cos(deg2rad(point2.latitude)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c;
+  return d;
+}
+
+const deg2rad = (deg)  => {
+  return deg * (Math.PI/180)
+}
+
 export const shouldSetFlightInProgress = (configState, animationEnabled, flightState) => {
   return configState !== 'animate' && animationEnabled && isFlightInProgress(flightState)
 }

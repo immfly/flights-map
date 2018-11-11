@@ -313,6 +313,7 @@
 
     setTimeout(function() {
         document.getElementsByTagName('flights-map')[0].flights = flights
+        document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
     }, 200)
     // setTimeout(function() {
     //     document.getElementsByTagName('flights-map')[0].flights = flights.slice(0, 10)

@@ -52,7 +52,6 @@ class FlightsMap extends global.HTMLElement {
   }
 
   updateMap (map, flights, config) {
-    console.log(flights)
     if (flights && flights.length > 0) {
       updateMap(map, flights, config)
       if (!map) {
