@@ -1,6 +1,8 @@
-import {shouldSetFlightInProgress, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle} from './FlightsService'
-import {manageLinesCurvatureDependingOnDuplicated} from './DuplicatedFlightsService'
+import { shouldSetFlightInProgress, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle } from './FlightsService'
+import { manageLinesCurvatureDependingOnDuplicated } from './DuplicatedFlightsService'
+import { order, cleanPoints } from '../utils/arrayManager'
 import ContinentsCoordinates from '../static/ContinentsCoordinates'
+import FlightsPositions from '../static/FlightsPositions';
 
 const defaultPlane = {
   svgPath: 'm2,106h28l24,30h72l-44,-133h35l80,132h98c21,0 21,34 0,34l-98,0 -80,134h-35l43,-133h-71l-24,30h-28l15,-47',
@@ -53,14 +55,17 @@ const buildPlane = (flight, name, flightLineId, position, shouldAnimate, scale, 
   )
 }
 
-const buildLine = (flightLineId, flight, config) => {
+const buildLine = (flightLineId, flight, config, origin, destination) => {
+  const flightOrigin = origin || flight.origin
+  const flightDestination = destination || flight.destination
+  const linesArc = (origin && destination) ? 0 : config.linesArc
   return Object.assign(
     {
       id: flightLineId,
       color: flight.color || config.colors.lines,
-      latitudes: [flight.origin.latitude, flight.destination.latitude],
-      longitudes: [flight.origin.longitude, flight.destination.longitude],
-      arc: config.linesArc,
+      latitudes: [flightOrigin.latitude, flightDestination.latitude],
+      longitudes: [flightOrigin.longitude, flightDestination.longitude],
+      arc: linesArc,
       balloonText: buildTextMarker(flight, config.dataToShowOnMarkers)
     },
     defaultLine
@@ -172,11 +177,22 @@ const getObjectsForFlight = (flight, i, config) => {
   const images = []
   const lines = []
   const planeName = 'plane' + i
-  const flightLineId = 'flight' + i
-  const position = getFlightPosition(flight.state)
+  let flightLineId = 'flight' + i
+  let position = getFlightPosition(flight.state)
   const scale = position === 0.5 ? 0.025 : 0.05
   const shouldAnimate = shouldSetFlightInProgress(config.globalFlightsState, config.animation.enabled, flight.state)
-  lines.push(buildLine(flightLineId, flight, config))
+  if (flight.route) {
+    const cleanedPoints = cleanPoints(flight.route)
+    const points = cleanedPoints
+    for (let i = 0; i < points.length - 1; i++) {
+      const flightRouteLineId = 'flight-route' + i
+      lines.push(buildLine(flightRouteLineId, flight, config, points[i], points[i + 1]))
+      position = FlightsPositions.FINAL
+    }
+    flightLineId = 'flight-route' + (points.length - 2)
+  } else {
+    lines.push(buildLine(flightLineId, flight, config))
+  }
   images.push(buildPlane(flight, planeName, flightLineId, position, shouldAnimate, scale, config))
   images.push(...getAirportsObjects(flight, position, shouldAnimate, config))
   return {images, lines}
