@@ -1,6 +1,6 @@
 # @immfly/flights-map
 
-![npm](https://img.shields.io/npm/v/@immfly/flights-map.svg) ![license](https://img.shields.io/npm/l/@immfly/flights-map.svg) ![github-issues](https://img.shields.io/github/issues/sonofjavascript/radar-test.svg)  
+![npm](https://img.shields.io/npm/v/@immfly/flights-map.svg) ![license](https://img.shields.io/npm/l/@immfly/flights-map.svg) ![github-issues](https://img.shields.io/github/issues/@immfly/flights-map.svg)  
 
 Custom element that receives a list of flights and show them in a map with an optional custom configuration.
 
