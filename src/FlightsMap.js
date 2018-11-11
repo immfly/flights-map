@@ -53,6 +53,7 @@ class FlightsMap extends global.HTMLElement {
 
   updateMap (map, flights, config) {
     if (flights && flights.length > 0) {
+      console.log("Update ", flights.length)
       updateMap(map, flights, config)
       if (!map) {
         this.pendingAddFlights = true
