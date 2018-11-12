@@ -1,4 +1,4 @@
-import { shouldSetFlightInProgress, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle, getPositioOnLine } from './FlightsService'
+import { shouldSetFlightInProgress, getFlightPosition, isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle, getPositionOnLine } from './FlightsService'
 import { manageLinesCurvatureDependingOnDuplicated } from './DuplicatedFlightsService'
 import { cleanPoints } from '../utils/arrayManager'
 import ContinentsCoordinates from '../static/ContinentsCoordinates'
@@ -9,7 +9,8 @@ const defaultPlane = {
   positionScale: 1.1,
   fixedSize: true
 }
-const defaultLine = { alpha: 0.4, thickness: 2 }
+const defaultLine = { alpha: 0.8, thickness: 2 }
+const defaultLineOutOfRoute = { alpha: 0.2, thickness: 1 }
 const defaultAirport = { type: 'circle' }
 
 const getConfigText = (keyText, value) => keyText + ': ' + '<b>' + value + '</b>'
@@ -55,7 +56,7 @@ const buildPlane = (flight, name, flightLineId, position, shouldAnimate, scale, 
   )
 }
 
-const buildLine = (flightLineId, flight, config, origin, destination, shouldOverrideLine) => {
+const buildLine = (flightLineId, flight, config, origin, destination, shouldShowLineOutOfRoute) => {
   const flightOrigin = origin || flight.origin
   const flightDestination = destination || flight.destination
   const linesArc = (origin && destination) ? 0 : config.linesArc
@@ -66,10 +67,9 @@ const buildLine = (flightLineId, flight, config, origin, destination, shouldOver
       latitudes: [flightOrigin.latitude, flightDestination.latitude],
       longitudes: [flightOrigin.longitude, flightDestination.longitude],
       arc: linesArc,
-      overrideLine: shouldOverrideLine,
       balloonText: buildTextMarker(flight, config.dataToShowOnMarkers)
     },
-    defaultLine
+    shouldShowLineOutOfRoute ? defaultLineOutOfRoute: defaultLine
   )
 }
 
@@ -98,6 +98,7 @@ const isObject = (value) => {
 const buildMapData = (config, flightsData) => {
   return {
     type: 'map',
+    theme: "dark",
     areasSettings: { unlistedAreasColor: config.colors.land },
     imagesSettings: {
       color: config.colors.cities,
@@ -163,7 +164,7 @@ export const createMapContainer = (id, backgroundColor) => {
 
 export const getAirportsObjects = (flight, position, shouldAnimate, config) => {
   const images = []
-  if (shouldAnimate || isFlightOnMiddle(position)) {
+  if (shouldAnimate || flight.route || isFlightOnMiddle(position)) {
     images.push(buildAirport(flight, flight.origin, flight.color, flight.name, config))
     images.push(buildAirport(flight, flight.destination, flight.color, flight.name, config))
   } else if (isFlightPendingToTakeOff(position)) {
@@ -190,14 +191,17 @@ const getObjectsForFlight = (flight, i, config) => {
       lines.push(buildLine(flightRouteLineId, flight, config, points[i], points[i + 1]))
       position = FlightsPositions.FINAL
     }
-    flightLineId = 'flight-route' + (points.length - 2)
+    const flightRouteLineId = 'flight-route-final'
+    if (flight.actualPosition) lines.push(buildLine(flightRouteLineId, flight, config, flight.actualPosition, flight.destination, true))
+    else lines.push(buildLine(flightRouteLineId, flight, config, points[points.length - 1], flight.destination, true))
+    images.push(buildPlane(flight, planeName, flightRouteLineId, 0, shouldAnimate, scale, config))
   } else {
     if (flight.actualPosition) {
       const initialLineId = 'flight-initial-' + i
       const finalLineId = 'flight-final-' + i
-      lines.push(buildLine(initialLineId, flight, config, null, null, true))
-      lines.push(buildLine(finalLineId, flight, config, null, null, true))
-      const positionOnLine = getPositioOnLine(flight.origin, flight.destination, flight.actualPosition)
+      lines.push(buildLine(initialLineId, flight, config, null, null))
+      lines.push(buildLine(finalLineId, flight, config, null, null))
+      const positionOnLine = getPositionOnLine(flight.origin, flight.destination, flight.actualPosition)
       images.push(buildPlane(flight, planeName, initialLineId, positionOnLine, shouldAnimate, scale, config))
     } else {
       lines.push(buildLine(flightLineId, flight, config))

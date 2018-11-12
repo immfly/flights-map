@@ -9,19 +9,18 @@ class FlightsMap extends global.HTMLElement {
 
   async connectedCallback () {
     this.mapConfig = DefaultConfig
-    this.upgradeProperty('flights')
     this.upgradeProperty('config')
+    this.upgradeProperty('flights')
     this.map = await this.createMap(this.mapConfig, this.mapFlights)
   }
 
   set flights (flights) {
     this.mapFlights = flights
-    this.updateData(this.mapFlights)
+    this.updateData(this.mapFlights, 'flights')
   }
 
   set config (newConfig) {
     this.mapConfig = this.manageConfig(this.mapConfig, newConfig)
-    this.updateData(this.mapFlights)
   }
 
   upgradeProperty (prop) {
@@ -53,7 +52,6 @@ class FlightsMap extends global.HTMLElement {
 
   updateMap (map, flights, config) {
     if (flights && flights.length > 0) {
-      console.log("Update ", flights.length)
       updateMap(map, flights, config)
       if (!map) {
         this.pendingAddFlights = true

@@ -5,8 +5,8 @@ const DefaultConfig = {
   linesArc: -0.7,
   globalFlightsState: (FlightsPositions.INITIAL + FlightsPositions.FINAL) / 2,
   colors: {
-    land: '#BDBDBD',
-    background: '#F5F5F5',
+    land: '#557689',
+    background: '#383747',
     planes: '#000000',
     lines: '#000000',
     cities: '#000000'
