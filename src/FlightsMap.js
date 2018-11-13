@@ -1,5 +1,5 @@
 import DefaultConfig from './static/defaultConfig'
-import { mergeConfigObject, createMapContainer, buildMap, updateMap } from './managers/mapManager'
+import { mergeConfigObject, createMapContainer, createGlowingEffectStyle, buildMap, updateMap } from './managers/mapManager'
 
 class FlightsMap extends global.HTMLElement {
   constructor () {
@@ -36,9 +36,13 @@ class FlightsMap extends global.HTMLElement {
     return config
   }
 
-  attachContent (id, backgroundColor) {
-    const mapContainer = createMapContainer(id, backgroundColor)
+  attachContent (config) {
+    const mapContainer = createMapContainer(config.mapContainerId, config.colors.background)
     this.shadowRoot.appendChild(mapContainer.cloneNode(true))
+    if (config.shouldAnimateFlyingState) {
+      const glowEffectStyle = createGlowingEffectStyle()
+      this.shadowRoot.appendChild(glowEffectStyle)
+    }
   }
 
   dispatchLoadedEvent () {
@@ -52,13 +56,13 @@ class FlightsMap extends global.HTMLElement {
 
   updateMap (map, flights, config) {
     if (flights && flights.length > 0) {
-      updateMap(map, flights, config)
+      updateMap(map, flights, config, this.shadowRoot)
       if (!map) {
         this.pendingAddFlights = true
         return
       }
       if (!this.pendingAddFlights) {
-        updateMap(map, flights, config)
+        updateMap(map, flights, config, this.shadowRoot)
       }
     }
   }
@@ -69,7 +73,7 @@ class FlightsMap extends global.HTMLElement {
         var self = this
         self.tryToAddDataSinceMapIsLoaded = setInterval(function () {
           if (self.map) {
-            updateMap(self.map, self.mapFlights, self.mapConfig)
+            updateMap(self.map, self.mapFlights, self.mapConfig, self.shadowRoot)
             clearInterval(self.tryToAddDataSinceMapIsLoaded)
           }
         }, 300)
@@ -81,7 +85,7 @@ class FlightsMap extends global.HTMLElement {
 
   async createMap (config, flights) {
     this.attachShadow({ mode: 'open' })
-    this.attachContent(config.mapContainerId, config.colors.background)
+    this.attachContent(config)
     const map = await buildMap(config, flights)
     this.dispatchLoadedEvent()
     return map

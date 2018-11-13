@@ -2,12 +2,12 @@ import { isFlightLanded, isFlightPendingToTakeOff, isFlightOnMiddle } from '../f
 import { buildTextMarker } from './utils/marker'
 import { baseAirport } from '../../static/baseObjects'
 
-const buildAirport = (flight, airport, color, flightName, config) => {
+const buildAirport = (flight, airport, color, config) => {
   color = color || config.colors.cities
   return Object.assign(
     {
+      id: `state${flight.state}`,
       title: airport.city,
-      label: flightName || '',
       labelFontSize: config.texts.labelsFontSize,
       color: color,
       rollOverColor: color,
@@ -23,12 +23,12 @@ const buildAirport = (flight, airport, color, flightName, config) => {
 export const buildAirportsObjects = (flight, position, shouldAnimate, config) => {
   const images = []
   if (shouldAnimate || flight.route || isFlightOnMiddle(position)) {
-    images.push(buildAirport(flight, flight.origin, flight.color, flight.name, config))
-    images.push(buildAirport(flight, flight.destination, flight.color, flight.name, config))
+    images.push(buildAirport(flight, flight.origin, flight.color, config))
+    images.push(buildAirport(flight, flight.destination, flight.color, config))
   } else if (isFlightPendingToTakeOff(position)) {
-    images.push(buildAirport(flight, flight.destination, flight.color, flight.name, config))
+    images.push(buildAirport(flight, flight.destination, flight.color, config))
   } else if (isFlightLanded(position)) {
-    images.push(buildAirport(flight, flight.origin, flight.color, flight.name, config))
+    images.push(buildAirport(flight, flight.origin, flight.color, config))
   }
   return images
 }

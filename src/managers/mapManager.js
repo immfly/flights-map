@@ -1,7 +1,9 @@
 
 import { manageLinesCurvatureDependingOnDuplicated } from './duplicatedFlightsManager'
 import { buildObjectsForFlight } from './builders/objectsBuilder'
+import { addGlowingEffectToMapImages } from './utils/glowingEffect'
 import ContinentsCoordinates from '../static/continentsCoordinates'
+import { glowingEffectSelector } from '../static/glowingEffectSelector'
 
 const isObject = (value) => {
   return value && typeof value === 'object' && value.constructor === Object
@@ -12,6 +14,7 @@ const buildMapData = (config, flightsData) => {
     type: 'map',
     theme: 'dark',
     areasSettings: { unlistedAreasColor: config.colors.land },
+    addClassNames: true,
     imagesSettings: {
       color: config.colors.cities,
       rollOverColor: config.colors.cities,
@@ -74,6 +77,30 @@ export const createMapContainer = (id, backgroundColor) => {
   return container
 }
 
+export const createGlowingEffectStyle = () => {
+  const style = document.createElement('style');
+  style.type = 'text/css';
+  style.innerHTML = glowingEffectSelector +
+  '{ \
+    filter: url(#glow); \
+    fill: hsl(7, 50%, 38%); \
+    -webkit-animation: light-pulse 3s infinite; \
+    -moz-animation: light-pulse 3s infinite; \
+    animation: light-pulse 3s infinite; \
+  } \
+  @keyframes light-pulse { \
+    1%   { fill: hsl(7, 50%, 38%); } \
+    50%  { fill: hsl(7, 50%, 78%); } \
+    100% { fill: hsl(7, 50%, 38%); } \
+  } \
+  @-webkit-keyframes light-pulse { \
+    1%   { fill: hsl(7, 50%, 38%); } \
+    50%  { fill: hsl(7, 50%, 78%); } \
+    100% { fill: hsl(7, 50%, 38%); } \
+  }';
+  return style
+}
+
 const buildData = (data, config) => {
   const images = []
   const lines = []
@@ -89,9 +116,15 @@ const buildData = (data, config) => {
   return { images, lines }
 }
 
-export const updateMap = (map, flights, config) => {
+export const updateMap = (map, flights, config, shadowRoot) => {
   const mapFlightsData = buildData(flights, config)
   map && updateContent(map, buildMapData(config, mapFlightsData))
+  if (config.shouldAnimateFlyingState) {
+    map && map.addListener( "zoomCompleted", function() {
+      addGlowingEffectToMapImages(shadowRoot)
+    })
+    addGlowingEffectToMapImages(shadowRoot)
+  }
 }
 
 const initializeMapZoom = (map, zoomData) => {

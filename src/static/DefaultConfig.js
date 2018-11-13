@@ -3,11 +3,12 @@ import { IN_PROGRESS } from './flightStates'
 const DefaultConfig = {
   mapContainerId: 'map',
   linesArc: -0.7,
+  shouldAnimateFlyingState: true,
   globalFlightsState: IN_PROGRESS,
   colors: {
     land: '#383747',
     background: '#504F64',
-    planes: '#000000',
+    aircrafts: '#000000',
     lines: '#000000',
     cities: '#000000'
   },
