@@ -6,7 +6,7 @@ const buildAirport = (flight, airport, color, config) => {
   color = color || config.colors.cities
   return Object.assign(
     {
-      id: `state${flight.state}`,
+      id: `state${flight.state}-${color.replace('#', '')}`,
       title: airport.city,
       labelFontSize: config.texts.labelsFontSize,
       color: color,

@@ -39,10 +39,6 @@ class FlightsMap extends global.HTMLElement {
   attachContent (config) {
     const mapContainer = createMapContainer(config.mapContainerId, config.colors.background)
     this.shadowRoot.appendChild(mapContainer.cloneNode(true))
-    if (config.shouldAnimateFlyingState) {
-      const glowEffectStyle = createGlowingEffectStyle()
-      this.shadowRoot.appendChild(glowEffectStyle)
-    }
   }
 
   dispatchLoadedEvent () {
@@ -52,6 +48,11 @@ class FlightsMap extends global.HTMLElement {
 
   updateData (flights) {
     this.updateMap(this.map, flights, this.mapConfig)
+
+    if (this.mapConfig.shouldAnimateFlyingState) {
+      const glowEffectStyle = createGlowingEffectStyle(flights)
+      this.shadowRoot.appendChild(glowEffectStyle)
+    }
   }
 
   updateMap (map, flights, config) {
