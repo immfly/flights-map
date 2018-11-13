@@ -7,7 +7,7 @@ const htmlWebpackPlugin = new HtmlWebPackPlugin({
 
 module.exports = {
   entry: {
-    app: ['./src/Index.js']
+    app: ['./src/index.js']
   },
   plugins: [
     htmlWebpackPlugin

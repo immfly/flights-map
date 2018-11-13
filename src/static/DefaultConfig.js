@@ -1,9 +1,9 @@
-import FlightsPositions from './FlightsPositions'
+import { IN_PROGRESS } from './flightStates'
 
 const DefaultConfig = {
   mapContainerId: 'map',
   linesArc: -0.7,
-  globalFlightsState: (FlightsPositions.INITIAL + FlightsPositions.FINAL) / 2,
+  globalFlightsState: IN_PROGRESS,
   colors: {
     land: '#383747',
     background: '#504F64',

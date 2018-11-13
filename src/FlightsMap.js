@@ -1,5 +1,5 @@
-import DefaultConfig from './static/DefaultConfig'
-import { mergeConfigObject, createMapContainer, buildMap, updateMap } from './services/MapService'
+import DefaultConfig from './static/defaultConfig'
+import { mergeConfigObject, createMapContainer, buildMap, updateMap } from './managers/mapManager'
 
 class FlightsMap extends global.HTMLElement {
   constructor () {

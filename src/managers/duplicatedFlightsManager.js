@@ -1,4 +1,4 @@
-import { flightsLinesArcs, maximumArc } from '../static/FlightsLinesArcs'
+import { flightsLinesArcs, maximumArc } from '../static/flightLinesArcs'
 
 const isSameLine = (line1, line2) => line1.id === line2.id
 
