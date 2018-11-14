@@ -4,6 +4,7 @@ import { buildObjectsForFlight } from './builders/objectsBuilder'
 import { addGlowingEffectToMapImages, getGlowingEffectCssClass } from './utils/glowingEffect'
 import { equalObject } from './utils/objectComparator'
 import { isObject } from './utils/object'
+import { IN_PROGRESS } from '../static/flightStates'
 import ContinentsCoordinates from '../static/continentsCoordinates'
 
 let oldMapData
@@ -78,10 +79,15 @@ export const createMapContainer = (id, backgroundColor) => {
 
 export const createGlowingEffectStyle = (flights) => {
   const style = document.createElement('style')
+  style.id = 'stylesheet'
   style.type = 'text/css'
   style.innerHTML = ''
   for (let i = 0; i < flights.length; i++) {
-    style.innerHTML += getGlowingEffectCssClass(flights[i].color)
+    const flight = flights[i]
+    if (flight.state === IN_PROGRESS && !flight.hideGlowingEffect) {
+      const glowingEffectClass = getGlowingEffectCssClass(flight)
+      style.innerHTML += glowingEffectClass.classes
+    }
   }
 
   return style

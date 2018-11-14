@@ -5,7 +5,7 @@ export const buildAircraft = (flight, name, flightLineId, position, shouldAnimat
   const color = flight.color || config.colors.aircrafts
   return Object.assign(
     {
-      id: `state${flight.state}-${color.replace('#', '')}`,
+      id: `state${flight.state}-${flight.name}-${color.replace('#', '')}`,
       title: name,
       lineId: flightLineId,
       color: color,

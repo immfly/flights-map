@@ -1,4 +1,6 @@
-import { glowingEffectSelector } from '../../static/glowingEffectSelector'
+import { IN_PROGRESS } from '../../static/flightStates'
+
+const glowingEffectSelector = '.amcharts-map-image-state1'
 
 const defaultHSL = {
   light: 'hsl(7, 50%, 38%)',
@@ -44,10 +46,10 @@ const getHSLColor = (color) => {
   return { light, strong }
 }
 
-const addGlowingEffectToMapImagesByColor = (shadowRoot, color) => {
-  if (!shadowRoot) return
-  const className = getClassName(color)
-  const filterId = getFilterId(color)
+const addGlowingEffectToMapImagesByColor = (shadowRoot, flight) => {
+  if (!shadowRoot || flight.state !== IN_PROGRESS || flight.hideGlowingEffect) return
+  const className = getClassName(flight)
+  const filterId = getFilterId(flight)
   const imagesElements = shadowRoot.querySelectorAll(className)
   for (let i = 0; i < imagesElements.length; i++) {
     const element = imagesElements[i].parentElement
@@ -65,18 +67,19 @@ const addGlowingEffectToMapImagesByColor = (shadowRoot, color) => {
 }
 
 export const addGlowingEffectToMapImages = (shadowRoot, flights) => {
-  flights.map(flight => addGlowingEffectToMapImagesByColor(shadowRoot, flight.color))
+  flights.map(flight => addGlowingEffectToMapImagesByColor(shadowRoot, flight))
 }
 
 const defaultFilterId = '#glow'
-const getFilterId = color => color ? defaultFilterId + color.replace('#', '') : defaultFilterId
-const getClassName = color => color ? glowingEffectSelector + '-' + color.replace('#', '') : glowingEffectSelector
+const getFilterId = flight => flight.color ? `${defaultFilterId}-${flight.name}-${flight.color.replace('#', '')}` : `${defaultFilterId}-${flight.name}`
+const getClassName = flight => flight.color ? `${glowingEffectSelector}-${flight.name}-${flight.color.replace('#', '')}` : `${glowingEffectSelector}-${flight.name}`
+const getEffectName = flight => `light-pulse-${(flight.color ? flight.color.replace('#', '') : '')}-${flight.name}`
 
-export const getGlowingEffectCssClass = (color) => {
-  const hslColor = getHSLColor(color)
-  const effectName = 'light-pulse' + (color ? color.replace('#', '') : '')
-  const filterId = getFilterId(color)
-  const className = getClassName(color)
+export const getGlowingEffectCssClass = (flight) => {
+  const hslColor = getHSLColor(flight.color)
+  const effectName =  getEffectName(flight)
+  const filterId = getFilterId(flight)
+  const className = getClassName(flight)
   const classes = className +
     '{ ' +
     `  filter: url(${filterId});` +
@@ -94,5 +97,5 @@ export const getGlowingEffectCssClass = (color) => {
     `  50%  { fill: ${hslColor.strong}; }` +
     `  100% { fill: ${hslColor.light}; }` +
     '}'
-  return classes
+  return { className, classes }
 }

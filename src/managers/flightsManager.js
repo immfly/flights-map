@@ -16,7 +16,8 @@ const isFlightCompleted = (state) => {
 export const getPositionOnLine = (point1, point2, actualPoint) => {
   const totalDistance = getDistanceInKM(point1, point2)
   const actualDistance = getDistanceInKM(point1, actualPoint)
-  return actualDistance / totalDistance
+  const position = actualDistance / totalDistance
+  return position < INITIAL ? MIDDLE : (position > FINAL ? MIDDLE : position)
 }
 
 const getDistanceInKM = (point1, point2) => {
