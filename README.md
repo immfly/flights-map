@@ -86,18 +86,17 @@ The most strange or particular code line could be `<flights-map ref={(el) => { e
 You can optionally specify a custom global configuration. This is the default configuration:
 ```
 {
-  mapContainerId: 'map', // The id of the map container on the custom element
-  linesArc: -0.7, // Angle of the lines curve on the map
-  shouldAnimateFlyingState: true, // * Optional. If it setted to true, the aircrafts and the airports with flights in state FLYING will be animated with a glow effect.
+  mapContainerId: 'map', // The id of the map container on the custom element.
+  linesArc: -0.7, // Angle of the lines curve on the map.
   globalFlightsState: 0.5, // The value of this can be between 0 and 1. It specifies the position of the aircraft on the line flight. For example, 0 will be at the begining of the line and 1 at the end.
   colors: {
-    land: '#BDBDBD', // Specifies the colors of the land
-    background: '#F5F5F5', // Specifies the color of the map background
-    aircrafts: '#000000', // Specifies a global color for aircrafts wich flight has no color
-    lines: '#000000', // Specifies a global color for lines wich flight has no color
-    cities: '#000000' // Specifies a global color for cities wich flight has no color
+    land: '#BDBDBD', // Specifies the colors of the land.
+    background: '#F5F5F5', // Specifies the color of the map background.
+    aircrafts: '#000000', // Specifies a global color for aircrafts wich flight has no color.
+    lines: '#000000', // Specifies a global color for lines wich flight has no color.
+    cities: '#000000' // Specifies a global color for cities wich flight has no color.
   },
-  zoomedContinent: null, // Specifies default bounding boxes to initialize the map. You can use 'europe', 'asia', 'oceania', 'africa', 'north_america' or 'south_america'
+  zoomedContinent: null, // Specifies default bounding boxes to initialize the map. You can use 'europe', 'asia', 'oceania', 'africa', 'north_america' or 'south_america'.
   dataToShowOnMarkers: [
     { id: 'name', text: 'Flight' },
     { id: 'origin.city', text: 'Origin' },
@@ -107,21 +106,22 @@ You can optionally specify a custom global configuration. This is the default co
     enabled: true, // If it is false, any aircraft will be animate altough its state is 'in progress'.
     flip: false, // Specifies if the aircrafts will move throug both directions. 
     loop: true, // Specifies if the aircrafts will move constantly on its line flight. 
-    duration: 8.5 // Specifies the duration of the aircrafts animation
+    duration: 8.5, // Specifies the duration of the aircrafts animation.
+    shouldAnimateFlyingState: true // * Optional. If it setted to true, the aircrafts and the airports with flights in state FLYING will be animated with a glow effect.
   },
   zoom: {
-    initialLevel: 1, // Specifies initial zoom level
-    minLevel: 1, // Specifies minimum zoom level
-    maxLevel: 7 // Specifies maximum zoom level,
-    initialCenter: { // Specifies initial zoom position of the map. If you have set the attribute zoomedContinent, this one has one effect
-      latitude: null, // Specifies the initial zoom latitude
-      longitude: null, // Specifies the initial zoom longitude
-      level: null // Specifies the initial zoom level
+    initialLevel: 1, // Specifies initial zoom level.
+    minLevel: 1, // Specifies minimum zoom level.
+    maxLevel: 7 // Specifies maximum zoom level.
+    initialCenter: { // Specifies initial zoom position of the map. If you have set the attribute zoomedContinent, this one has one effect.
+      latitude: null, // Specifies the initial zoom latitude.
+      longitude: null, // Specifies the initial zoom longitude.
+      level: null // Specifies the initial zoom level.
     }
   },
   texts: { 
-    labelsFontSize: 8, // Specifies labels font size of the map
-    markersFontSize: 14 // Specifies font size on flights markers
+    labelsFontSize: 8, // Specifies labels font size of the map.
+    markersFontSize: 14 // Specifies font size on flights markers.
   }
 }
 ```
