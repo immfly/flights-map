@@ -1,3 +1,4 @@
+
 const ContinentsCoordinates = {
   EUROPE: {
     latitude: 52.87328104521875,

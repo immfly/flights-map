@@ -13,14 +13,14 @@
             origin: { city: 'Paris', latitude: 48.8567, longitude: 2.3510 },
             destination: { city: 'Toronto', latitude: 43.8163, longitude: -79.4287 },
             state: 0,
-            color: '#F60'
+            color: '#F60000'
         },
         {
             name: 'HJ83L',
             origin: { city: 'Ear Falls', latitude: 50.59182174718828, longitude: -91.0098349022146 },
             destination: { city: 'El Retorno', latitude: 2.2321954407806093, longitude: -72.0254599022146 },
             state: 1,
-            color: '#F60'
+            color: '#F60000'
         },
         {
             name: 'WPODW',
@@ -33,21 +33,21 @@
             origin: { city: 'Magadan Oblast', latitude: 65.53348382646833, longitude: 155.57467375530678 },
             destination: { city: 'Yukon-Koyukuk', latitude: 58.097365492959604, longitude: -117.80242816948964 },
             state: 1,
-            color: '#F60'
+            color: '#F60000'
         },
         {
             name: 'TY63D',
             origin: { city: 'Sarysu District', latitude: 45.33227998372203, longitude: 70.83132220892696 },
             destination: { city: 'Tamanrasset Province', latitude: 24.840857099259473, longitude: 6.319603458926963 },
             state: 2,
-            color: '#F60'
+            color: '#F60000'
         },
         {
             name: 'SAT12',
             origin: { city: 'Phillipstown', latitude: -30.15056667657248, longitude: 24.073509708926963 },
             destination: { city: 'Manandriana', latitude: -20.600097354605126, longitude: 46.94567912038565 },
             state: 2,
-            color: '#F60'
+            color: '#F60000'
         },
         {
             name: 'V1LD9',
@@ -157,14 +157,23 @@
     ]
 
     setTimeout(function() {
-        document.getElementsByTagName('flights-map')[0].flights = flights
+            document.getElementsByTagName('flights-map')[0].flights = flights
+            document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
+        setInterval(function() {
+            flights.splice(-1)
+            document.getElementsByTagName('flights-map')[0].flights = flights
+            document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
+        }, 5000)
+        
     }, 200)
-    setTimeout(function() {
-        document.getElementsByTagName('flights-map')[0].flights = flights.slice(0, 10)
-    }, 10000)
-    setTimeout(function() {
-        document.getElementsByTagName('flights-map')[0].flights = [flights[0], flights[6], flights[14]]
-    }, 15000)
+    // setTimeout(function() {
+    //     document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
+    //     document.getElementsByTagName('flights-map')[0].flights = flights.slice(0, 10)
+    // }, 10000)
+    // setTimeout(function() {
+    //     document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
+    //     document.getElementsByTagName('flights-map')[0].flights = [flights[0], flights[6], flights[14]]
+    // }, 15000)
 </script>
 
 </body>

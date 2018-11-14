@@ -1,4 +1,4 @@
-import { flightsLinesArcs, maximumArc } from '../static/FlightsLinesArcs'
+import { flightsLinesArcs, maximumArc } from '../static/flightLinesArcs'
 
 const isSameLine = (line1, line2) => line1.id === line2.id
 
@@ -31,7 +31,7 @@ const hasLinesSameCoordinates = (line1, line2) => {
 const existsEqualLine = (line, lines) => {
   for (let i = 0; i < lines.length; i++) {
     const iteratedLine = lines[i]
-    if (!line.overrideLine && hasLinesSameCoordinates(line, iteratedLine)) {
+    if (hasLinesSameCoordinates(line, iteratedLine)) {
       return true
     }
   }

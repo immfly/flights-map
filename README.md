@@ -33,9 +33,9 @@ https://immfly.github.io/flights-map-demo.github.io/
     latitude: 43.8163, // Destination city latitude
     longitude: -79.4287 // Destination city longitude
   },
-  state: 0, // * Optional. Flight state: 0 means pending to start, 1 means in progress, and 2 means completed. If there is no state, the position of the plane on the flight will be on the middle
-  color: '#F60' // * Optional. Color to be painted on the map, including plane, cities and line flight,
-  route: [{latitude:29.719757, longitude:-13.391225, date:"2018-11-11T18:58:32.590Z"}, {latitude:29.719757, longitude:-13.391225, date:"2018-11-11T18:59:22.988Z"}] // * Optional. Array of points with latitude, longitude and date. If this key is on the flight object, the state will be ommited and the plane will be painted on the last last position
+  state: 0, // * Optional. Flight state: 0 means pending to start, 1 means in progress, and 2 means completed. If there is no state, the position of the aircraft on the flight will be on the middle
+  color: '#F60' // * Optional. Color to be painted on the map, including aircraft, cities and line flight,
+  route: [{latitude:29.719757, longitude:-13.391225, date:"2018-11-11T18:58:32.590Z"}, {latitude:29.719757, longitude:-13.391225, date:"2018-11-11T18:59:22.988Z"}] // * Optional. Array of points with latitude, longitude and date. If this key is on the flight object, the state will be ommited and the aircraft will be painted on the last last position
 }
 ```
 
@@ -88,11 +88,12 @@ You can optionally specify a custom global configuration. This is the default co
 {
   mapContainerId: 'map', // The id of the map container on the custom element
   linesArc: -0.7, // Angle of the lines curve on the map
-  globalFlightsState: 0.5, // The value of this can be between 0 and 1. It specifies the position of the plane on the line flight. For example, 0 will be at the begining of the line and 1 at the end.
+  shouldAnimateFlyingState: true, // * Optional. If it setted to true, the aircrafts and the airports with flights in state FLYING will be animated with a glow effect.
+  globalFlightsState: 0.5, // The value of this can be between 0 and 1. It specifies the position of the aircraft on the line flight. For example, 0 will be at the begining of the line and 1 at the end.
   colors: {
     land: '#BDBDBD', // Specifies the colors of the land
     background: '#F5F5F5', // Specifies the color of the map background
-    planes: '#000000', // Specifies a global color for planes wich flight has no color
+    aircrafts: '#000000', // Specifies a global color for aircrafts wich flight has no color
     lines: '#000000', // Specifies a global color for lines wich flight has no color
     cities: '#000000' // Specifies a global color for cities wich flight has no color
   },
@@ -103,10 +104,10 @@ You can optionally specify a custom global configuration. This is the default co
     { id: 'destination.city', text: 'Destination' }
   ], // Specifies the data to be shown on markers. 'id' is key on the object and 'text' is the name that will be showed on the marker.
   animation: {
-    enabled: true, // If it is false, any plane will be animate altough its state is 'in progress'.
-    flip: false, // Specifies if the planes will move throug both directions. 
-    loop: true, // Specifies if the planes will move constantly on its line flight. 
-    duration: 8.5 // Specifies the duration of the planes animation
+    enabled: true, // If it is false, any aircraft will be animate altough its state is 'in progress'.
+    flip: false, // Specifies if the aircrafts will move throug both directions. 
+    loop: true, // Specifies if the aircrafts will move constantly on its line flight. 
+    duration: 8.5 // Specifies the duration of the aircrafts animation
   },
   zoom: {
     initialLevel: 1, // Specifies initial zoom level

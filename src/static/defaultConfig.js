@@ -1,13 +1,13 @@
-import FlightsPositions from './FlightsPositions'
+import { IN_PROGRESS } from './flightStates'
 
 const DefaultConfig = {
   mapContainerId: 'map',
   linesArc: -0.7,
-  globalFlightsState: (FlightsPositions.INITIAL + FlightsPositions.FINAL) / 2,
+  globalFlightsState: IN_PROGRESS,
   colors: {
-    land: '#BDBDBD',
-    background: '#F5F5F5',
-    planes: '#000000',
+    land: '#383747',
+    background: '#504F64',
+    aircrafts: '#000000',
     lines: '#000000',
     cities: '#000000'
   },
@@ -39,6 +39,7 @@ const DefaultConfig = {
     enabled: true,
     flip: false,
     loop: true,
+    shouldAnimateFlyingState: true,
     duration: 8.5
   },
   zoom: {

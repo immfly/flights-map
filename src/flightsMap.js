@@ -1,5 +1,5 @@
-import DefaultConfig from './static/DefaultConfig'
-import { mergeConfigObject, createMapContainer, buildMap, updateMap } from './services/MapService'
+import DefaultConfig from './static/defaultConfig'
+import { mergeConfigObject, createMapContainer, createGlowingEffectStyle, buildMap, updateMap } from './managers/mapManager'
 
 class FlightsMap extends global.HTMLElement {
   constructor () {
@@ -9,8 +9,8 @@ class FlightsMap extends global.HTMLElement {
 
   async connectedCallback () {
     this.mapConfig = DefaultConfig
-    this.upgradeProperty('flights')
     this.upgradeProperty('config')
+    this.upgradeProperty('flights')
     this.map = await this.createMap(this.mapConfig, this.mapFlights)
   }
 
@@ -20,8 +20,7 @@ class FlightsMap extends global.HTMLElement {
   }
 
   set config (newConfig) {
-    this.mapConfig = this.manageConfig(this.mapConfig, newConfig)
-    this.updateData(this.mapFlights)
+    this.mapConfig = mergeConfigObject(this.mapConfig, newConfig)
   }
 
   upgradeProperty (prop) {
@@ -32,13 +31,8 @@ class FlightsMap extends global.HTMLElement {
     }
   }
 
-  manageConfig (baseConfig, newConfig) {
-    const config = mergeConfigObject(baseConfig, newConfig)
-    return config
-  }
-
-  attachContent (id, backgroundColor) {
-    const mapContainer = createMapContainer(id, backgroundColor)
+  attachContent (config) {
+    const mapContainer = createMapContainer(config.mapContainerId, config.colors.background)
     this.shadowRoot.appendChild(mapContainer.cloneNode(true))
   }
 
@@ -49,18 +43,22 @@ class FlightsMap extends global.HTMLElement {
 
   updateData (flights) {
     this.updateMap(this.map, flights, this.mapConfig)
+
+    if (this.mapConfig.animation.shouldAnimateFlyingState) {
+      const glowEffectStyle = createGlowingEffectStyle(flights)
+      this.shadowRoot.appendChild(glowEffectStyle)
+    }
   }
 
   updateMap (map, flights, config) {
-    if (flights && flights.length > 0) {
-      console.log("Update ", flights.length)
-      updateMap(map, flights, config)
+    if (flights && flights.length >= 0) {
+      updateMap(map, flights, config, this.shadowRoot)
       if (!map) {
         this.pendingAddFlights = true
         return
       }
       if (!this.pendingAddFlights) {
-        updateMap(map, flights, config)
+        updateMap(map, flights, config, this.shadowRoot)
       }
     }
   }
@@ -71,7 +69,7 @@ class FlightsMap extends global.HTMLElement {
         var self = this
         self.tryToAddDataSinceMapIsLoaded = setInterval(function () {
           if (self.map) {
-            updateMap(self.map, self.mapFlights, self.mapConfig)
+            updateMap(self.map, self.mapFlights, self.mapConfig, self.shadowRoot)
             clearInterval(self.tryToAddDataSinceMapIsLoaded)
           }
         }, 300)
@@ -83,7 +81,7 @@ class FlightsMap extends global.HTMLElement {
 
   async createMap (config, flights) {
     this.attachShadow({ mode: 'open' })
-    this.attachContent(config.mapContainerId, config.colors.background)
+    this.attachContent(config)
     const map = await buildMap(config, flights)
     this.dispatchLoadedEvent()
     return map
