@@ -45,14 +45,12 @@ const getHSLColor = (color) => {
 }
 
 const addGlowingEffectToMapImagesByColor = (shadowRoot, color) => {
+  if (!shadowRoot) return
   const className = getClassName(color)
   const filterId = getFilterId(color)
-  console.log('filter', className)
-  console.log('filter', filterId)
   const imagesElements = shadowRoot.querySelectorAll(className)
   for (let i = 0; i < imagesElements.length; i++) {
     const element = imagesElements[i].parentElement
-    console.log()
     if (!element.innerHTML.includes('<defs>')) {
       element.innerHTML +=
         '<defs>' +
@@ -79,8 +77,6 @@ export const getGlowingEffectCssClass = (color) => {
   const effectName = 'light-pulse' + (color ? color.replace('#', '') : '')
   const filterId = getFilterId(color)
   const className = getClassName(color)
-  console.log('class', className)
-  console.log('class', filterId)
   const classes = className +
     '{ ' +
     `  filter: url(${filterId});` +

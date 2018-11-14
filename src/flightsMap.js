@@ -16,11 +16,11 @@ class FlightsMap extends global.HTMLElement {
 
   set flights (flights) {
     this.mapFlights = flights
-    this.updateData(this.mapFlights, 'flights')
+    this.updateData(this.mapFlights)
   }
 
   set config (newConfig) {
-    this.mapConfig = this.manageConfig(this.mapConfig, newConfig)
+    this.mapConfig = mergeConfigObject(this.mapConfig, newConfig)
   }
 
   upgradeProperty (prop) {
@@ -29,11 +29,6 @@ class FlightsMap extends global.HTMLElement {
       delete this[prop]
       this[prop] = value
     }
-  }
-
-  manageConfig (baseConfig, newConfig) {
-    const config = mergeConfigObject(baseConfig, newConfig)
-    return config
   }
 
   attachContent (config) {
@@ -49,14 +44,14 @@ class FlightsMap extends global.HTMLElement {
   updateData (flights) {
     this.updateMap(this.map, flights, this.mapConfig)
 
-    if (this.mapConfig.shouldAnimateFlyingState) {
+    if (this.mapConfig.animation.shouldAnimateFlyingState) {
       const glowEffectStyle = createGlowingEffectStyle(flights)
       this.shadowRoot.appendChild(glowEffectStyle)
     }
   }
 
   updateMap (map, flights, config) {
-    if (flights && flights.length > 0) {
+    if (flights && flights.length >= 0) {
       updateMap(map, flights, config, this.shadowRoot)
       if (!map) {
         this.pendingAddFlights = true

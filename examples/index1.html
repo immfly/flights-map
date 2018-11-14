@@ -157,8 +157,14 @@
     ]
 
     setTimeout(function() {
-        document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
-        document.getElementsByTagName('flights-map')[0].flights = flights
+            document.getElementsByTagName('flights-map')[0].flights = flights
+            document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
+        setInterval(function() {
+            flights.splice(-1)
+            document.getElementsByTagName('flights-map')[0].flights = flights
+            document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
+        }, 5000)
+        
     }, 200)
     // setTimeout(function() {
     //     document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}

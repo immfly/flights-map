@@ -3,7 +3,6 @@ import { IN_PROGRESS } from './flightStates'
 const DefaultConfig = {
   mapContainerId: 'map',
   linesArc: -0.7,
-  shouldAnimateFlyingState: true,
   globalFlightsState: IN_PROGRESS,
   colors: {
     land: '#383747',
@@ -40,6 +39,7 @@ const DefaultConfig = {
     enabled: true,
     flip: false,
     loop: true,
+    shouldAnimateFlyingState: true,
     duration: 8.5
   },
   zoom: {

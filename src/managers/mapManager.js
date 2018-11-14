@@ -2,13 +2,13 @@
 import { manageLinesCurvatureDependingOnDuplicated } from './duplicatedFlightsManager'
 import { buildObjectsForFlight } from './builders/objectsBuilder'
 import { addGlowingEffectToMapImages, getGlowingEffectCssClass } from './utils/glowingEffect'
+import { equalObject } from './utils/objectComparator'
+import { isObject } from './utils/object'
 import ContinentsCoordinates from '../static/continentsCoordinates'
 
-const isObject = (value) => {
-  return value && typeof value === 'object' && value.constructor === Object
-}
+let oldMapData
 
-const buildMapData = (config, flightsData) => {
+const buildMapData = (config, mapData) => {
   return {
     type: 'map',
     theme: 'dark',
@@ -26,8 +26,8 @@ const buildMapData = (config, flightsData) => {
     linesSettings: { color: config.colors.lines, alpha: 0.4, thickness: 1 },
     dataProvider: {
       mapVar: window.AmCharts.maps.worldLow,
-      images: flightsData.images,
-      lines: flightsData.lines,
+      images: mapData.images,
+      lines: mapData.lines,
       zoomLevel: config.zoom.initialLevel,
       zoomLongitude: 15,
       zoomLatitude: 15
@@ -102,14 +102,18 @@ const buildData = (data, config) => {
   return { images, lines }
 }
 
+const shouldUpdateMap = (map, oldMapData, newMapData) => {
+  return map && !equalObject(oldMapData, newMapData)
+}
+
 export const updateMap = (map, flights, config, shadowRoot) => {
-  const mapFlightsData = buildData(flights, config)
-  map && updateContent(map, buildMapData(config, mapFlightsData))
-  if (config.shouldAnimateFlyingState) {
-    map && map.addListener('zoomCompleted', function () {
+  const newMapData = buildData(flights, config)
+  if (shouldUpdateMap(map, oldMapData, newMapData)) {
+    oldMapData = newMapData
+    updateContent(map, buildMapData(config, newMapData))
+    if (config.animation.shouldAnimateFlyingState) {
       addGlowingEffectToMapImages(shadowRoot, flights)
-    })
-    addGlowingEffectToMapImages(shadowRoot, flights)
+    }
   }
 }
 
