@@ -7,13 +7,16 @@ const buildAirport = (flight, airport, color, config) => {
   return Object.assign(
     {
       id: `state${flight.state}-${flight.name}-${color.replace('#', '')}`,
-      title: airport.city,
+      title: flight.name,
       labelFontSize: config.texts.labelsFontSize,
       color: color,
+      selectedColor: color,
       rollOverColor: color,
       labelRollOverColor: '#000000',
       latitude: airport.latitude,
       longitude: airport.longitude,
+      mouseEnabled: !flight.hideGlowingEffect, 
+      selectable: !flight.hideGlowingEffect,
       balloonText: buildTextMarker(flight, config.dataToShowOnMarkers)
     },
     baseAirport

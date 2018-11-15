@@ -12,6 +12,7 @@ const DefaultConfig = {
     cities: '#000000'
   },
   zoomedContinent: null,
+  showMarkers: false,
   dataToShowOnMarkers: [
     {
       id: 'name',
@@ -50,6 +51,13 @@ const DefaultConfig = {
       latitude: null,
       longitude: null,
       level: null
+    },
+    homeButtonEnabled: false,
+    buttonFillAlpha: 0.7,
+    buttonFillColor: '#E6E6E6',
+    controlsPosition: {
+      top: 20,
+      right: 20
     }
   },
   texts: {

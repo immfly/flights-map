@@ -5,15 +5,18 @@ import { addGlowingEffectToMapImages, getGlowingEffectCssClass } from './utils/g
 import { equalObject } from './utils/objectComparator'
 import { isObject } from './utils/object'
 import { IN_PROGRESS } from '../static/flightStates'
+import { baseAircraftsName } from '../static/baseObjects'
 import ContinentsCoordinates from '../static/continentsCoordinates'
 
 let oldMapData
 
+const getObjectId = objectId => objectId.split(baseAircraftsName)[0]
+
 const buildMapData = (config, mapData) => {
-  return {
+  const map = {
     type: 'map',
     theme: 'dark',
-    areasSettings: { unlistedAreasColor: config.colors.land },
+    areasSettings: { unlistedAreasColor: config.colors.land, selectable: true },
     addClassNames: true,
     imagesSettings: {
       color: config.colors.cities,
@@ -23,7 +26,17 @@ const buildMapData = (config, mapData) => {
       animationDuration: config.animation.duration,
       adjustAnimationSpeed: true
     },
-    zoomControl: { minZoomLevel: config.zoom.minLevel, maxZoomLevel: config.zoom.maxLevel },
+    zoomControl: { 
+      minZoomLevel: config.zoom.minLevel, 
+      maxZoomLevel: config.zoom.maxLevel,
+      buttonFillColor: config.zoom.buttonFillColor,
+      buttonFillAlpha: config.zoom.buttonFillAlpha,
+      homeButtonEnabled: config.zoom.homeButtonEnabled,
+      top: config.zoom.controlsPosition.top,
+      right: config.zoom.controlsPosition.right,
+      bottom: config.zoom.controlsPosition.bottom,
+      left: config.zoom.controlsPosition.left
+    },
     linesSettings: { color: config.colors.lines, alpha: 0.4, thickness: 1 },
     dataProvider: {
       mapVar: window.AmCharts.maps.worldLow,
@@ -43,9 +56,18 @@ const buildMapData = (config, mapData) => {
       shadowAlpha: 0,
       fillAlpha: 0.6
     },
+    listeners: [ {
+      event: "clickMapObject",
+      method: function( eventMap ) {
+        const event = new CustomEvent("flightsMapObjectClick", { detail: {flightName: getObjectId(eventMap.mapObject.title)} })
+        document.dispatchEvent(event)
+      }
+    }],
     mouseCursorStyle: 'pointer',
     projection: 'winkel3'
   }
+  if (!config.showMarkers) map.showBalloon = false
+  return map
 }
 
 const updateContent = (map, contentMap) => {
