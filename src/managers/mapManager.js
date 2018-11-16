@@ -66,7 +66,7 @@ const buildMapData = (config, mapData) => {
     mouseCursorStyle: 'pointer',
     projection: 'winkel3'
   }
-  if (!config.showMarkers) map.showBalloon = false
+  if (!config.showMarkers) map.showBalloon = function () {}
   return map
 }
 
