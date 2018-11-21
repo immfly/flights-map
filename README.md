@@ -97,6 +97,8 @@ You can optionally specify a custom global configuration. This is the default co
     cities: '#000000' // Specifies a global color for cities wich flight has no color.
   },
   zoomedContinent: null, // Specifies default bounding boxes to initialize the map. You can use 'europe', 'asia', 'oceania', 'africa', 'north_america' or 'south_america'.
+  forceUpdate: false, // In react applications, you have to forceUpdate to render the flights, when the component that wraps the flights-map already has been mounted.,
+  showMarkers: false, // Specifies if the default markers have to be shown.
   dataToShowOnMarkers: [
     { id: 'name', text: 'Flight' },
     { id: 'origin.city', text: 'Origin' },
@@ -117,7 +119,14 @@ You can optionally specify a custom global configuration. This is the default co
       latitude: null, // Specifies the initial zoom latitude.
       longitude: null, // Specifies the initial zoom longitude.
       level: null // Specifies the initial zoom level.
-    }
+    },
+    homeButtonEnabled: false, // Specifies if the home button must be shown.
+    buttonFillAlpha: 0.7, // Specifies the alpha value of the buttons background.
+    buttonFillColor: '#E6E6E6', // Specifies the background color of the buttons.
+    controlsPosition: {
+      top: 20,
+      right: 20
+    } // Specifies the position of the map control (home, zomm in, zoom out). You can add left, bottom, top and right.
   },
   texts: { 
     labelsFontSize: 8, // Specifies labels font size of the map.
@@ -163,6 +172,12 @@ class FlightsMapContainer extends React.Component {
 
 export default FlightsMapContainer
 ```
+
+## Events
+There are many javascript events: 
+*  **flightsMapObjectClick**: after flight line, aircraft or airpots clicked.
+*  **mapLoaded**: after map loaded.
+
 
 ## Development usage
 *Only if you haved clone the project and you want to interact with it, improve it or try it.*

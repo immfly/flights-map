@@ -10,6 +10,11 @@ import ContinentsCoordinates from '../static/continentsCoordinates'
 
 let oldMapData
 
+const fireEvent = (name, detail) => {
+  const event = new CustomEvent(name, { detail: detail })
+  document.dispatchEvent(event)
+}
+
 const getObjectId = objectId => objectId.split(baseAircraftsName)[0]
 
 const buildMapData = (config, mapData) => {
@@ -59,8 +64,7 @@ const buildMapData = (config, mapData) => {
     listeners: [ {
       event: "clickMapObject",
       method: function( eventMap ) {
-        const event = new CustomEvent("flightsMapObjectClick", { detail: {flightName: getObjectId(eventMap.mapObject.title)} })
-        document.dispatchEvent(event)
+        fireEvent("flightsMapObjectClick", { flightName: getObjectId(eventMap.mapObject.title) })
       }
     }],
     mouseCursorStyle: 'pointer',
@@ -168,6 +172,7 @@ const initialize = (config, flights) => {
   if (!flightsContainer) return
   const containerDivMap = flightsContainer.shadowRoot.getElementById(config.mapContainerId)
   const map = window.AmCharts.makeChart(containerDivMap, buildMapData(config, flightsData))
+  fireEvent("mapLoaded")
   if (config.zoomedContinent) initializeMapZoom(map, getZoomData(config.zoomedContinent))
   else if (config.zoom.initialCenter && config.zoom.initialCenter.latitude && config.zoom.initialCenter.longitude && config.zoom.initialCenter.level) {
     initializeMapZoom(map, getSpecificZoomData(config.zoom.initialCenter))
