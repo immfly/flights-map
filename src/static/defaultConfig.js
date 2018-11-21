@@ -12,6 +12,7 @@ const DefaultConfig = {
     cities: '#000000'
   },
   zoomedContinent: null,
+  forceUpdate: false,
   showMarkers: false,
   dataToShowOnMarkers: [
     {

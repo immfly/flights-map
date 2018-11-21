@@ -130,13 +130,13 @@ const buildData = (data, config) => {
   return { images, lines }
 }
 
-const shouldUpdateMap = (map, oldMapData, newMapData) => {
-  return map && !equalObject(oldMapData, newMapData)
+const shouldUpdateMap = (map, oldMapData, newMapData, forceUpdate) => {
+  return map && (forceUpdate || !equalObject(oldMapData, newMapData)) 
 }
 
 export const updateMap = (map, flights, config, shadowRoot) => {
   const newMapData = buildData(flights, config)
-  if (shouldUpdateMap(map, oldMapData, newMapData)) {
+  if (shouldUpdateMap(map, oldMapData, newMapData, config.forceUpdate)) {
     oldMapData = newMapData
     updateContent(map, buildMapData(config, newMapData))
     if (config.animation.shouldAnimateFlyingState) {
