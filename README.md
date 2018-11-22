@@ -176,7 +176,7 @@ export default FlightsMapContainer
 ## Events
 There are many javascript events: 
 *  **flightsMapObjectClick**: after flight line, aircraft or airpots clicked.
-*  **mapLoaded**: after map loaded.
+*  **flightsMapLoaded**: after map loaded.
 
 
 ## Development usage
