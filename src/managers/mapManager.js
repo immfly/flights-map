@@ -172,7 +172,7 @@ const initialize = (config, flights) => {
   if (!flightsContainer) return
   const containerDivMap = flightsContainer.shadowRoot.getElementById(config.mapContainerId)
   const map = window.AmCharts.makeChart(containerDivMap, buildMapData(config, flightsData))
-  fireEvent("mapLoaded")
+  fireEvent("flightsMapLoaded")
   if (config.zoomedContinent) initializeMapZoom(map, getZoomData(config.zoomedContinent))
   else if (config.zoom.initialCenter && config.zoom.initialCenter.latitude && config.zoom.initialCenter.longitude && config.zoom.initialCenter.level) {
     initializeMapZoom(map, getSpecificZoomData(config.zoom.initialCenter))
