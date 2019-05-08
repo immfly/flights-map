@@ -1,4 +1,1 @@
-
-export const isObject = (value) => {
-  return value && typeof value === 'object' && value.constructor === Object
-}
+export const isObject = value => value && typeof value === 'object' && value.constructor === Object

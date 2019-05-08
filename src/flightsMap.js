@@ -44,7 +44,7 @@ class FlightsMap extends global.HTMLElement {
   removeGlowSheet () {
     const glowStyleSheet = this.shadowRoot.getElementById('glow-stylesheet')
     if (!glowStyleSheet || !glowStyleSheet.parentNode) return
-    
+
     glowStyleSheet.parentNode.removeChild(glowStyleSheet)
   }
 
@@ -57,7 +57,7 @@ class FlightsMap extends global.HTMLElement {
       this.shadowRoot.appendChild(glowEffectStyle)
       return
     }
-    
+
     this.removeGlowSheet()
   }
 
