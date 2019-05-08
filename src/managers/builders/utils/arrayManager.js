@@ -1,10 +1,10 @@
-export const order = (array) => {
+export const order = array => {
   return array.sort(function (a, b) {
     return new Date(a.date) - new Date(b.date)
   })
 }
 
-export const cleanWrongPoints = (points) => {
+export const cleanWrongPoints = points => {
   const validPoints = []
   for (let i = 1; i < points.length; i++) {
     const previousPoint = points[i - 1]
@@ -16,7 +16,7 @@ export const cleanWrongPoints = (points) => {
   return validPoints
 }
 
-export const cleanDuplicatedPoints = (points) => {
+export const cleanDuplicatedPoints = points => {
   const nonDuplicatedPoints = []
   for (let i = 0; i < points.length; i++) {
     const point = points[i]
@@ -30,7 +30,7 @@ export const cleanDuplicatedPoints = (points) => {
   return nonDuplicatedPoints
 }
 
-export const cleanPoints = (points) => {
+export const cleanPoints = points => {
   const cleanedPoints = cleanDuplicatedPoints(points)
   return cleanWrongPoints(cleanedPoints)
 }

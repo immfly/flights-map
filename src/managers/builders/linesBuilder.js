@@ -6,7 +6,7 @@ export const buildLine = (flightLineId, flight, config, origin, destination, sho
   const flightDestination = destination || flight.destination
   const color = flight.color || config.colors.lines
   const linesArc = (origin && destination) ? 0 : config.linesArc
-  
+
   return Object.assign(
     {
       id: flightLineId,

@@ -31,10 +31,9 @@ const hasLinesSameCoordinates = (line1, line2) => {
 const existsEqualLine = (line, lines) => {
   for (let i = 0; i < lines.length; i++) {
     const iteratedLine = lines[i]
-    if (hasLinesSameCoordinates(line, iteratedLine)) {
-      return true
-    }
+    if (hasLinesSameCoordinates(line, iteratedLine)) return true
   }
+
   return false
 }
 
@@ -47,19 +46,22 @@ const order = (object, field) => {
     min = value2
     max = value1
   }
-  return {min, max}
+
+  return { min, max }
 }
 
-const orderLatitudes = (object) => order(object, 'latitudes')
+const orderLatitudes = object => order(object, 'latitudes')
 
-const orderLongitudes = (object) => order(object, 'longitudes')
+const orderLongitudes = object => order(object, 'longitudes')
 
-const orderCoordinates = (line) => {
+const orderCoordinates = line => {
   const newLine = Object.assign({}, line)
   const latitudesOrdered = orderLatitudes(newLine)
   const longitudesOrdered = orderLongitudes(newLine)
+
   newLine.latitudes = [latitudesOrdered.min, latitudesOrdered.max]
   newLine.longitudes = [longitudesOrdered.min, longitudesOrdered.max]
+
   return newLine
 }
 
@@ -87,13 +89,12 @@ const getNewArc = (line, duplicatedLines) => {
   return arc
 }
 
-export const manageLinesCurvatureDependingOnDuplicated = (lines) => {
+export const manageLinesCurvatureDependingOnDuplicated = lines => {
   const duplicatedLines = []
   for (let i = 0; i < lines.length; i++) {
     const existsLine = existsEqualLine(lines[i], lines)
-    if (existsLine) {
-      lines[i].arc = getNewArc(lines[i], duplicatedLines)
-    }
+    if (existsLine) lines[i].arc = getNewArc(lines[i], duplicatedLines)
   }
+
   return lines
 }

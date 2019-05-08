@@ -153,16 +153,16 @@ const initializeMapZoom = (map, zoomData) => {
   if (zoomData) map.zoomToLongLat(zoomData.level, zoomData.longitude, zoomData.latitude, true)
 }
 
-const getContintentData = (data) => {
+const getContintentData = data => {
   return ContinentsCoordinates[data.toUpperCase()]
 }
 
-const getZoomData = (continentData) => {
+const getZoomData = continentData => {
   const continent = getContintentData(continentData)
   if (continent) return { level: continent.zoom, latitude: continent.latitude, longitude: continent.longitude }
 }
 
-const getSpecificZoomData = (center) => {
+const getSpecificZoomData = center => {
   return { level: center.level, latitude: center.latitude, longitude: center.longitude }
 }
 
@@ -170,13 +170,17 @@ const initialize = (config, flights) => {
   const flightsData = buildData(flights, config)
   const flightsContainer = document.querySelector('flights-map')
   if (!flightsContainer) return
+
   const containerDivMap = flightsContainer.shadowRoot.getElementById(config.mapContainerId)
   const map = window.AmCharts.makeChart(containerDivMap, buildMapData(config, flightsData))
+
   fireEvent('flightsMapLoaded')
+
   if (config.zoomedContinent) initializeMapZoom(map, getZoomData(config.zoomedContinent))
   else if (config.zoom.initialCenter && config.zoom.initialCenter.latitude && config.zoom.initialCenter.longitude && config.zoom.initialCenter.level) {
     initializeMapZoom(map, getSpecificZoomData(config.zoom.initialCenter))
   }
+
   return map
 }
 
@@ -187,5 +191,6 @@ export const buildMap = async (config, flights) => {
       resolve(map)
     }, 1000)
   })
+
   return promise
 }
