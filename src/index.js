@@ -1,3 +1,4 @@
-import './lib/ammap/ammap.js'
-import './lib/ammap/maps/js/worldLow.js'
+import './lib/ammap/ammap'
+import './utils/htmlMethods'
+import './lib/ammap/maps/js/worldLow'
 import './flightsMap'

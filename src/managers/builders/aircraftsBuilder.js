@@ -1,6 +1,5 @@
 import { buildTextMarker } from './utils/marker'
-import { baseAircraftsName } from '../../static/baseObjects'
-import { baseAircraft } from '../../static/baseObjects'
+import { baseAircraft, baseAircraftsName } from '../../static/baseObjects'
 
 export const buildAircraft = (flight, flightLineId, position, shouldAnimate, config) => {
   const color = flight.color || config.colors.aircrafts
@@ -16,7 +15,7 @@ export const buildAircraft = (flight, flightLineId, position, shouldAnimate, con
       animateAlongLine: shouldAnimate,
       flipDirection: config.animation.flip,
       loop: config.animation.loop,
-      mouseEnabled: !flight.hideGlowingEffect, 
+      mouseEnabled: !flight.hideGlowingEffect,
       selectable: !flight.hideGlowingEffect,
       balloonText: buildTextMarker(flight, config.dataToShowOnMarkers)
     },

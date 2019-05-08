@@ -41,13 +41,24 @@ class FlightsMap extends global.HTMLElement {
     this.dispatchEvent(event)
   }
 
+  removeGlowSheet () {
+    const glowStyleSheet = this.shadowRoot.getElementById('glow-stylesheet')
+    if (!glowStyleSheet || !glowStyleSheet.parentNode) return
+    
+    glowStyleSheet.parentNode.removeChild(glowStyleSheet)
+  }
+
   updateData (flights) {
     this.updateMap(this.map, flights, this.mapConfig)
 
     if (this.mapConfig.animation.shouldAnimateFlyingState) {
+      this.removeGlowSheet()
       const glowEffectStyle = createGlowingEffectStyle(flights)
       this.shadowRoot.appendChild(glowEffectStyle)
+      return
     }
+    
+    this.removeGlowSheet()
   }
 
   updateMap (map, flights, config) {

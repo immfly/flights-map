@@ -165,15 +165,7 @@
   setTimeout(function() {
       document.getElementsByTagName('flights-map')[0].flights = flights
       document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
-      var animated = false
-    setInterval(function() {
-      flights.splice(-1)
-      document.getElementsByTagName('flights-map')[0].flights = flights
-      document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false, shouldAnimateFlyingState: animated}}
-      animated = !animated
-    }, 5000)
-    
-  }, 200)
+  },200)
   // setTimeout(function() {
   //   document.getElementsByTagName('flights-map')[0].config = {animation: {enabled: false}}
   //   document.getElementsByTagName('flights-map')[0].flights = flights.slice(0, 10)

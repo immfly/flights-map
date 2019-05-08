@@ -15,7 +15,7 @@ export const buildLine = (flightLineId, flight, config, origin, destination, sho
       latitudes: [flightOrigin.latitude, flightDestination.latitude],
       longitudes: [flightOrigin.longitude, flightDestination.longitude],
       arc: linesArc,
-      mouseEnabled: !flight.hideGlowingEffect, 
+      mouseEnabled: !flight.hideGlowingEffect,
       selectable: !flight.hideGlowingEffect,
       balloonText: buildTextMarker(flight, config.dataToShowOnMarkers)
     },

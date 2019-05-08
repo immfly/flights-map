@@ -31,8 +31,8 @@ const buildMapData = (config, mapData) => {
       animationDuration: config.animation.duration,
       adjustAnimationSpeed: true
     },
-    zoomControl: { 
-      minZoomLevel: config.zoom.minLevel, 
+    zoomControl: {
+      minZoomLevel: config.zoom.minLevel,
       maxZoomLevel: config.zoom.maxLevel,
       buttonFillColor: config.zoom.buttonFillColor,
       buttonFillAlpha: config.zoom.buttonFillAlpha,
@@ -62,9 +62,9 @@ const buildMapData = (config, mapData) => {
       fillAlpha: 0.6
     },
     listeners: [ {
-      event: "clickMapObject",
-      method: function( eventMap ) {
-        fireEvent("flightsMapObjectClick", { flightName: getObjectId(eventMap.mapObject.title) })
+      event: 'clickMapObject',
+      method: function (eventMap) {
+        fireEvent('flightsMapObjectClick', { flightName: getObjectId(eventMap.mapObject.title) })
       }
     }],
     mouseCursorStyle: 'pointer',
@@ -105,7 +105,7 @@ export const createMapContainer = (id, backgroundColor) => {
 
 export const createGlowingEffectStyle = (flights) => {
   const style = document.createElement('style')
-  style.id = 'stylesheet'
+  style.id = 'glow-stylesheet'
   style.type = 'text/css'
   style.innerHTML = ''
   for (let i = 0; i < flights.length; i++) {
@@ -135,7 +135,7 @@ const buildData = (data, config) => {
 }
 
 const shouldUpdateMap = (map, oldMapData, newMapData, forceUpdate) => {
-  return map && (forceUpdate || !equalObject(oldMapData, newMapData)) 
+  return map && (forceUpdate || !equalObject(oldMapData, newMapData))
 }
 
 export const updateMap = (map, flights, config, shadowRoot) => {
@@ -172,7 +172,7 @@ const initialize = (config, flights) => {
   if (!flightsContainer) return
   const containerDivMap = flightsContainer.shadowRoot.getElementById(config.mapContainerId)
   const map = window.AmCharts.makeChart(containerDivMap, buildMapData(config, flightsData))
-  fireEvent("flightsMapLoaded")
+  fireEvent('flightsMapLoaded')
   if (config.zoomedContinent) initializeMapZoom(map, getZoomData(config.zoomedContinent))
   else if (config.zoom.initialCenter && config.zoom.initialCenter.latitude && config.zoom.initialCenter.longitude && config.zoom.initialCenter.level) {
     initializeMapZoom(map, getSpecificZoomData(config.zoom.initialCenter))

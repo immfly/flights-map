@@ -77,7 +77,7 @@ const getEffectName = flight => `light-pulse-${(flight.color ? flight.color.repl
 
 export const getGlowingEffectCssClass = (flight) => {
   const hslColor = getHSLColor(flight.color)
-  const effectName =  getEffectName(flight)
+  const effectName = getEffectName(flight)
   const filterId = getFilterId(flight)
   const className = getClassName(flight)
   const classes = className +
