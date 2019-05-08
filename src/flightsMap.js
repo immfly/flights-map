@@ -24,11 +24,11 @@ class FlightsMap extends global.HTMLElement {
   }
 
   upgradeProperty (prop) {
-    if (this.hasOwnProperty(prop)) {
-      let value = this[prop]
-      delete this[prop]
-      this[prop] = value
-    }
+    if (!this.hasOwnProperty(prop)) return
+
+    let value = this[prop]
+    delete this[prop]
+    this[prop] = value
   }
 
   attachContent (config) {
@@ -62,32 +62,32 @@ class FlightsMap extends global.HTMLElement {
   }
 
   updateMap (map, flights, config) {
-    if (flights && flights.length >= 0) {
-      updateMap(map, flights, config, this.shadowRoot)
-      if (!map) {
-        this.pendingAddFlights = true
-        return
-      }
-      if (!this.pendingAddFlights) {
-        updateMap(map, flights, config, this.shadowRoot)
-      }
+    if (!flights || !flights.length) return
+
+    updateMap(map, flights, config, this.shadowRoot)
+    if (!map) {
+      this.pendingAddFlights = true
+      return
     }
+
+    if (!this.pendingAddFlights) updateMap(map, flights, config, this.shadowRoot)
   }
 
   addPendingFlights () {
-    if (this.pendingAddFlights) {
-      if (!this.map) {
-        var self = this
-        self.tryToAddDataSinceMapIsLoaded = setInterval(function () {
-          if (self.map) {
-            updateMap(self.map, self.mapFlights, self.mapConfig, self.shadowRoot)
-            clearInterval(self.tryToAddDataSinceMapIsLoaded)
-          }
-        }, 300)
-        return
-      }
+    if (!this.pendingAddFlights) return
+
+    if (this.map) {
       this.pendingAddFlights = false
+      return
     }
+
+    var self = this
+    self.tryToAddDataSinceMapIsLoaded = setInterval(function () {
+      if (self.map) {
+        updateMap(self.map, self.mapFlights, self.mapConfig, self.shadowRoot)
+        clearInterval(self.tryToAddDataSinceMapIsLoaded)
+      }
+    }, 300)
   }
 
   async createMap (config, flights) {

@@ -10,10 +10,9 @@ const hasLinesSameObjects = (line1, line2, field) => {
   const object1Line2 = line2[field][0]
   const object2Line2 = line2[field][1]
   if (object1Line1 === object1Line2 || object1Line1 === object2Line2) {
-    if (object2Line1 === object1Line2 || object2Line1 === object2Line2) {
-      return true
-    }
+    if (object2Line1 === object1Line2 || object2Line1 === object2Line2) return true
   }
+  
   return false
 }
 

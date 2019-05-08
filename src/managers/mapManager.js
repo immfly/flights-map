@@ -98,8 +98,10 @@ export const mergeConfigObject = (baseObject, newObject) => {
 export const createMapContainer = (id, backgroundColor) => {
   const container = document.createElement('div')
   if (id) container.id = id
+
   container.style.backgroundColor = backgroundColor
   container.style.height = '100%'
+
   return container
 }
 
@@ -120,17 +122,20 @@ export const createGlowingEffectStyle = (flights) => {
 }
 
 const buildData = (data, config) => {
+  if (!data) return { images: [], lines: [] }
+
   const images = []
   const lines = []
-  if (data) {
-    for (let i = 0; i < data.length; i++) {
-      const flight = data[i]
-      const flightObjects = buildObjectsForFlight(flight, i, config)
-      images.push(...flightObjects.images)
-      lines.push(...flightObjects.lines)
-    }
+
+  for (let i = 0; i < data.length; i++) {
+    const flight = data[i]
+    const flightObjects = buildObjectsForFlight(flight, i, config)
+    images.push(...flightObjects.images)
+    lines.push(...flightObjects.lines)
   }
+
   manageLinesCurvatureDependingOnDuplicated(lines)
+
   return { images, lines }
 }
 
@@ -140,13 +145,15 @@ const shouldUpdateMap = (map, oldMapData, newMapData, forceUpdate) => {
 
 export const updateMap = (map, flights, config, shadowRoot) => {
   const newMapData = buildData(flights, config)
-  if (shouldUpdateMap(map, oldMapData, newMapData, config.forceUpdate)) {
-    oldMapData = newMapData
-    updateContent(map, buildMapData(config, newMapData))
-    if (config.animation.shouldAnimateFlyingState) {
-      addGlowingEffectToMapImages(shadowRoot, flights)
-    }
-  }
+
+  if (!shouldUpdateMap(map, oldMapData, newMapData, config.forceUpdate)) return
+
+  oldMapData = newMapData
+  updateContent(map, buildMapData(config, newMapData))
+
+  if (!config.animation.shouldAnimateFlyingState) return
+
+  addGlowingEffectToMapImages(shadowRoot, flights)
 }
 
 const initializeMapZoom = (map, zoomData) => {
