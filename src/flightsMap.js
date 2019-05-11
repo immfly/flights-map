@@ -1,5 +1,5 @@
 import DefaultConfig from './static/defaultConfig'
-import { mergeConfigObject, createMapContainer, createGlowingEffectStyle, buildMap, updateMap } from './managers/mapManager'
+import * as MapManager from './managers/mapManager'
 
 class FlightsMap extends global.HTMLElement {
   constructor () {
@@ -20,19 +20,19 @@ class FlightsMap extends global.HTMLElement {
   }
 
   set config (newConfig) {
-    this.mapConfig = mergeConfigObject(this.mapConfig, newConfig)
+    this.mapConfig = MapManager.mergeConfigObject(this.mapConfig, newConfig)
   }
 
   upgradeProperty (prop) {
     if (this.hasOwnProperty(prop)) {
-      let value = this[prop]
+      const value = this[prop]
       delete this[prop]
       this[prop] = value
     }
   }
 
   attachContent (config) {
-    const mapContainer = createMapContainer(config.mapContainerId, config.colors.background)
+    const mapContainer = MapManager.createContainer(config.mapContainerId, config.colors.background)
     this.shadowRoot.appendChild(mapContainer.cloneNode(true))
   }
 
@@ -51,49 +51,49 @@ class FlightsMap extends global.HTMLElement {
   updateData (flights) {
     this.updateMap(this.map, flights, this.mapConfig)
 
-    if (this.mapConfig.animation.shouldAnimateFlyingState) {
-      this.removeGlowSheet()
-      const glowEffectStyle = createGlowingEffectStyle(flights)
-      this.shadowRoot.appendChild(glowEffectStyle)
-      return
-    }
+    if (!this.mapConfig.animation.shouldAnimateFlyingState) return this.removeGlowSheet()
 
     this.removeGlowSheet()
+    const glowEffectStyle = MapManager.createGlowingEffectStyle(flights)
+    this.shadowRoot.appendChild(glowEffectStyle)
   }
 
   updateMap (map, flights, config) {
-    if (flights && flights.length >= 0) {
-      updateMap(map, flights, config, this.shadowRoot)
-      if (!map) {
-        this.pendingAddFlights = true
-        return
-      }
-      if (!this.pendingAddFlights) {
-        updateMap(map, flights, config, this.shadowRoot)
-      }
+    if (!flights || !(flights.length >= 0)) return
+
+    MapManager.update(map, flights, config, this.shadowRoot)
+
+    if (!map) {
+      this.pendingAddFlights = true
+      return
     }
+
+    if (this.pendingAddFlights) return
+
+    MapManager.update(map, flights, config, this.shadowRoot)
   }
 
   addPendingFlights () {
-    if (this.pendingAddFlights) {
-      if (!this.map) {
-        var self = this
-        self.tryToAddDataSinceMapIsLoaded = setInterval(function () {
-          if (self.map) {
-            updateMap(self.map, self.mapFlights, self.mapConfig, self.shadowRoot)
-            clearInterval(self.tryToAddDataSinceMapIsLoaded)
-          }
-        }, 300)
-        return
-      }
+    if (!this.pendingAddFlights) return
+
+    if (this.map) {
       this.pendingAddFlights = false
+      return
     }
+
+    var self = this
+    self.tryToAddDataSinceMapIsLoaded = setInterval(function () {
+      if (self.map) {
+        MapManager.update(self.map, self.mapFlights, self.mapConfig, self.shadowRoot)
+        clearInterval(self.tryToAddDataSinceMapIsLoaded)
+      }
+    }, 300)
   }
 
   async createMap (config, flights) {
     this.attachShadow({ mode: 'open' })
     this.attachContent(config)
-    const map = await buildMap(config, flights)
+    const map = await MapManager.build(config, flights)
     this.dispatchLoadedEvent()
     return map
   }

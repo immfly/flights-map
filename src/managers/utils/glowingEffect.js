@@ -7,7 +7,7 @@ const defaultHSL = {
   strong: 'hsl(7, 50%, 78%)'
 }
 
-const getHSLColor = (color) => {
+const getHSLColor = color => {
   if (!color) return defaultHSL
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color)
 
@@ -75,7 +75,7 @@ const getFilterId = flight => flight.color ? `${defaultFilterId}-${flight.name}-
 const getClassName = flight => flight.color ? `${glowingEffectSelector}-${flight.name}-${flight.color.replace('#', '')}` : `${glowingEffectSelector}-${flight.name}`
 const getEffectName = flight => `light-pulse-${(flight.color ? flight.color.replace('#', '') : '')}-${flight.name}`
 
-export const getGlowingEffectCssClass = (flight) => {
+export const getGlowingEffectCssClass = flight => {
   const hslColor = getHSLColor(flight.color)
   const effectName = getEffectName(flight)
   const filterId = getFilterId(flight)
@@ -97,5 +97,6 @@ export const getGlowingEffectCssClass = (flight) => {
     `  50%  { fill: ${hslColor.strong}; }` +
     `  100% { fill: ${hslColor.light}; }` +
     '}'
+
   return { className, classes }
 }

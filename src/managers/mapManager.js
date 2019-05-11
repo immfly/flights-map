@@ -11,7 +11,7 @@ import ContinentsCoordinates from '../static/continentsCoordinates'
 let oldMapData
 
 const fireEvent = (name, detail) => {
-  const event = new CustomEvent(name, { detail: detail })
+  const event = new window.CustomEvent(name, { detail: detail })
   document.dispatchEvent(event)
 }
 
@@ -71,6 +71,7 @@ const buildMapData = (config, mapData) => {
     projection: 'winkel3'
   }
   if (!config.showMarkers) map.showBalloon = function () {}
+
   return map
 }
 
@@ -95,15 +96,18 @@ export const mergeConfigObject = (baseObject, newObject) => {
   return baseObject
 }
 
-export const createMapContainer = (id, backgroundColor) => {
+export const createContainer = (id, backgroundColor) => {
   const container = document.createElement('div')
+
   if (id) container.id = id
+
   container.style.backgroundColor = backgroundColor
   container.style.height = '100%'
+
   return container
 }
 
-export const createGlowingEffectStyle = (flights) => {
+export const createGlowingEffectStyle = flights => {
   const style = document.createElement('style')
   style.id = 'glow-stylesheet'
   style.type = 'text/css'
@@ -119,43 +123,45 @@ export const createGlowingEffectStyle = (flights) => {
   return style
 }
 
-const buildData = (data, config) => {
+const preBuildData = (data, config) => {
+  if (!data) return { images: [], lines: [] }
+
   const images = []
   const lines = []
-  if (data) {
-    for (let i = 0; i < data.length; i++) {
-      const flight = data[i]
-      const flightObjects = buildObjectsForFlight(flight, i, config)
-      images.push(...flightObjects.images)
-      lines.push(...flightObjects.lines)
-    }
-  }
+
+  data.map((flight, index) => {
+    const flightObjects = buildObjectsForFlight(flight, index, config)
+    images.push(...flightObjects.images)
+    lines.push(...flightObjects.lines)
+  })
+
   manageLinesCurvatureDependingOnDuplicated(lines)
+
   return { images, lines }
 }
 
-const shouldUpdateMap = (map, oldMapData, newMapData, forceUpdate) => {
+const shouldUpdate = (map, oldMapData, newMapData, forceUpdate) => {
   return map && (forceUpdate || !equalObject(oldMapData, newMapData))
 }
 
-export const updateMap = (map, flights, config, shadowRoot) => {
-  const newMapData = buildData(flights, config)
-  if (shouldUpdateMap(map, oldMapData, newMapData, config.forceUpdate)) {
-    oldMapData = newMapData
-    updateContent(map, buildMapData(config, newMapData))
-    if (config.animation.shouldAnimateFlyingState) {
-      addGlowingEffectToMapImages(shadowRoot, flights)
-    }
-  }
+export const update = (map, flights, config, shadowRoot) => {
+  const newMapData = preBuildData(flights, config)
+
+  if (!shouldUpdate(map, oldMapData, newMapData, config.forceUpdate)) return
+
+  oldMapData = newMapData
+  updateContent(map, buildMapData(config, newMapData))
+
+  if (!config.animation.shouldAnimateFlyingState) return
+
+  addGlowingEffectToMapImages(shadowRoot, flights)
 }
 
 const initializeMapZoom = (map, zoomData) => {
   if (zoomData) map.zoomToLongLat(zoomData.level, zoomData.longitude, zoomData.latitude, true)
 }
 
-const getContintentData = data => {
-  return ContinentsCoordinates[data.toUpperCase()]
-}
+const getContintentData = data => ContinentsCoordinates[data.toUpperCase()]
 
 const getZoomData = continentData => {
   const continent = getContintentData(continentData)
@@ -167,7 +173,7 @@ const getSpecificZoomData = center => {
 }
 
 const initialize = (config, flights) => {
-  const flightsData = buildData(flights, config)
+  const flightsData = preBuildData(flights, config)
   const flightsContainer = document.querySelector('flights-map')
   if (!flightsContainer) return
 
@@ -184,7 +190,7 @@ const initialize = (config, flights) => {
   return map
 }
 
-export const buildMap = async (config, flights) => {
+export const build = async (config, flights) => {
   const promise = new Promise(function (resolve) {
     setTimeout(function () {
       const map = initialize(config, flights)
