@@ -18,6 +18,7 @@ const fireEvent = (name, detail) => {
 const getObjectId = objectId => objectId.split(baseAircraftsName)[0]
 
 const buildMapData = (config, mapData) => {
+  let objectClicked = false
   const map = {
     type: 'map',
     theme: 'dark',
@@ -61,15 +62,27 @@ const buildMapData = (config, mapData) => {
       shadowAlpha: 0,
       fillAlpha: 0.6
     },
-    listeners: [ {
+    listeners: [{
+      event: 'click',
+      method: function () {
+        setTimeout(function () {
+          if (!objectClicked) fireEvent('flightsMapClick')
+        }, 100)
+      }
+    }, {
       event: 'clickMapObject',
       method: function (eventMap) {
+        objectClicked = true
         fireEvent('flightsMapObjectClick', { flightName: getObjectId(eventMap.mapObject.title) })
+        setTimeout(function () {
+          objectClicked = false
+        }, 250)
       }
     }],
     mouseCursorStyle: 'pointer',
     projection: 'winkel3'
   }
+
   if (!config.showMarkers) map.showBalloon = function () {}
 
   return map

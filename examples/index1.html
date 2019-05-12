@@ -8,13 +8,20 @@
 
 <script>
 
+  document.addEventListener('flightsMapClick', function() {
+    console.log('map click')
+  })
+
+  document.addEventListener('flightsMapObjectClick', function() {
+    console.log('object click')
+  })
+
   var flights = [
     {
       name: 'V131',
       origin: { city: 'Paris', latitude: 48.8567, longitude: 2.3510 },
       destination: { city: 'Toronto', latitude: 43.8163, longitude: -79.4287 },
       state: 0,
-      color: '#F60000'
     },
     {
       name: 'HJ83L',
@@ -161,6 +168,8 @@
       color: '#DA291C'
     }
   ]
+
+  flights.map(f => f.selectable = true)
 
   setTimeout(function() {
       document.getElementsByTagName('flights-map')[0].flights = flights
