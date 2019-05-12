@@ -15,8 +15,8 @@ const buildAirport = (flight, airport, color, config) => {
       labelRollOverColor: '#000000',
       latitude: airport.latitude,
       longitude: airport.longitude,
-      mouseEnabled: !flight.hideGlowingEffect,
-      selectable: !flight.hideGlowingEffect,
+      mouseEnabled: flight.selectable,
+      selectable: flight.selectable,
       balloonText: buildTextMarker(flight, config.dataToShowOnMarkers)
     },
     baseAirport

@@ -15,8 +15,8 @@ export const buildAircraft = (flight, flightLineId, position, shouldAnimate, con
       animateAlongLine: shouldAnimate,
       flipDirection: config.animation.flip,
       loop: config.animation.loop,
-      mouseEnabled: !flight.hideGlowingEffect,
-      selectable: !flight.hideGlowingEffect,
+      mouseEnabled: flight.selectable,
+      selectable: flight.selectable,
       balloonText: buildTextMarker(flight, config.dataToShowOnMarkers)
     },
     baseAircraft
