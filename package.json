@@ -1,6 +1,6 @@
 {
   "name": "@immfly/flights-map",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Custom element that receives a list of flights and show them in a map with a custom configuration",
   "main": "lib.js",
   "author": "Albert Pérez Farrés ",
