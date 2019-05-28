@@ -30,10 +30,12 @@ const buildObjectWithRoute = (flight, config, shouldAnimate) => {
 export const buildObjectsForFlight = (flight, index, config) => {
   const flightLineId = 'flight' + index
   const position = getFlightPosition(flight.state)
+
+  const percentagePosition = flight.position || position
   const shouldAnimate = shouldSetFlightInProgress(config.globalFlightsState, config.animation.enabled, flight.state)
   const flightObjects = flight.route
     ? buildObjectWithRoute(flight, config, shouldAnimate)
-    : buildObjectWithNoRoute(flight, flightLineId, config, position, shouldAnimate)
+    : buildObjectWithNoRoute(flight, flightLineId, config, percentagePosition, shouldAnimate)
   const images = [...flightObjects.images, ...buildAirportsObjects(flight, position, shouldAnimate, config)]
   const lines = [...flightObjects.lines]
   return { images, lines }
